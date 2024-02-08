@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
+    <servlet>
+        <servlet-name>ControllerBook</servlet-name>
+        <servlet-class>controller.ControllerBook</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ControllerCategory</servlet-name>
+        <servlet-class>controller.ControllerCategory</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ControllerDetails</servlet-name>
+        <servlet-class>controller.ControllerDetails</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ControllerCart</servlet-name>
+        <servlet-class>controller.ControllerCart</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ControllerBook</servlet-name>
+        <url-pattern>/home</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ControllerCategory</servlet-name>
+        <url-pattern>/category</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ControllerDetails</servlet-name>
+        <url-pattern>/details</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ControllerCart</servlet-name>
+        <url-pattern>/cart</url-pattern>
+    </servlet-mapping>
+</web-app>
