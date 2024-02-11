@@ -197,7 +197,9 @@
                         } else if (key === 'price') {
                             book[key] = parseFloat(value);
                         } else if (key === 'publication_date') {
-                            book[key] = new Date(value);
+                            let date = new Date(value);
+                            let formattedDateString = date.toISOString().slice(0, 10);
+                            book[key] = formattedDateString;
                         } else {
                             book[key] = value;
                         }
@@ -209,6 +211,7 @@
                 let bookJSON = JSON.stringify(book);
                 let encodedBookJSON = encodeURIComponent(bookJSON);
                 let url = "details?book=" + encodedBookJSON;
+                
                 window.location.href = url;
             }
 

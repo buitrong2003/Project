@@ -297,7 +297,8 @@
                     </div>
                     <div style="color: red" class="error">${requestScope.error}</div>
                     <div class = "purchase-info">
-                        <button onclick="addToCart('${requestScope.book}')" type = "button" class = "btn">
+                        <button onclick="addToCart('${requestScope.book.getBook_id()}')" type = "button" class = "btn">
+                            <input id="${requestScope.book.getBook_id()}" type="hidden" name="book" value="${requestScope.book}">
                             Add to Cart <i class = "fas fa-shopping-cart"></i>
                         </button>
                         <button type = "button" class = "btn">Compare</button>
@@ -335,33 +336,47 @@
                     slideImage();
                 });
             });
-            var addToCart = (book) => {
+            var addToCart = (id) => {
                 let quantity = document.querySelector('.quantity-input').value;
+
                 function parseBookString(inputString) {
                     let book = {};
                     inputString.match(/(\w+)=(.+?)(?=\s\w+=|$)/g).forEach(match => {
                         let [key, value] = match.split('=');
                         value = value.replace(/,/g, '');
-                        if (key === 'book_id' || key === 'category_id' || key === 'book_hot' || key === 'quantity') {
+                        if (key === 'book_id' || key === 'quantity' || key === 'category_id' || key === 'book_hot') {
                             book[key] = parseInt(value);
                         } else if (key === 'price') {
                             book[key] = parseFloat(value);
                         } else if (key === 'publication_date') {
-                            book[key] = new Date(value);
+                            if (value === '--') {
+                                book[key] = null; // hoặc giá trị mặc định khác tùy vào yêu cầu
+                            } else {
+                                const months = {'Jan': '01', 'Feb': '02', 'Mar': '03', 'Apr': '04', 'May': '05', 'Jun': '06', 'Jul': '07', 'Aug': '08', 'Sep': '09', 'Oct': '10', 'Nov': '11', 'Dec': '12'};
+                                const parts = value.split(' ');
+                                const year = parts[5];
+                                const month = months[parts[1]];
+                                const day = parts[2];
+
+                                const formattedDateString = year + "-" + month + "-" + day;
+                                book[key] = formattedDateString;
+                            }
                         } else {
                             book[key] = value;
                         }
                     });
                     return book;
                 }
-                let numberFruit = document.querySelector('.quantity-input');
-                let bookCart = parseBookString(book);
+                let inputString = document.getElementById(id).value;
+                let bookCart = parseBookString(inputString); // Sử dụng kết quả trả về từ hàm parseBookString
                 let bookJSON = JSON.stringify(bookCart);
+                let numberFruit = document.querySelector('.quantity-input');
                 let numberChangeBook = numberFruit.max;
-                console.log(numberChangeBook);
                 let encodedBookJSON = encodeURIComponent(bookJSON);
+                console.log(bookJSON);
                 window.location.href = "cart?book=" + encodedBookJSON + "&quantityBook=" + quantity + "&numberChange=" + numberChangeBook;
             };
+
             function slideImage() {
                 const displayWidth = document.querySelector('.img-showcase img:first-child').clientWidth;
                 document.querySelector('.img-showcase').style.transform = `translateX(${- (imgId - 1) * displayWidth}px)`;
@@ -380,9 +395,7 @@
                 } else {
                     error.innerHTML = "";
                 }
-                console.log(max);
-                console.log(value);
-                console.log(error);
+
                 inputElement.value = value;
             }
 

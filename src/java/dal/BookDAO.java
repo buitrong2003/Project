@@ -45,7 +45,7 @@ public class BookDAO extends GenericDAO<Book> {
 
     public static void main(String[] args) {
         for (Book book : new BookDAO().getListBookPagination(2, 10, new BookDAO().getListBookByAuthor("", "a"))) {
-            System.out.println(book.getBook_id());
+            System.out.println(book);
         }
     }
 
