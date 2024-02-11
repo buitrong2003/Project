@@ -338,7 +338,6 @@
             });
             var addToCart = (id) => {
                 let quantity = document.querySelector('.quantity-input').value;
-
                 function parseBookString(inputString) {
                     let book = {};
                     inputString.match(/(\w+)=(.+?)(?=\s\w+=|$)/g).forEach(match => {
@@ -350,7 +349,7 @@
                             book[key] = parseFloat(value);
                         } else if (key === 'publication_date') {
                             if (value === '--') {
-                                book[key] = null; // hoặc giá trị mặc định khác tùy vào yêu cầu
+                                book[key] = null; 
                             } else {
                                 const months = {'Jan': '01', 'Feb': '02', 'Mar': '03', 'Apr': '04', 'May': '05', 'Jun': '06', 'Jul': '07', 'Aug': '08', 'Sep': '09', 'Oct': '10', 'Nov': '11', 'Dec': '12'};
                                 const parts = value.split(' ');
@@ -368,7 +367,7 @@
                     return book;
                 }
                 let inputString = document.getElementById(id).value;
-                let bookCart = parseBookString(inputString); // Sử dụng kết quả trả về từ hàm parseBookString
+                let bookCart = parseBookString(inputString);
                 let bookJSON = JSON.stringify(bookCart);
                 let numberFruit = document.querySelector('.quantity-input');
                 let numberChangeBook = numberFruit.max;
@@ -398,8 +397,6 @@
 
                 inputElement.value = value;
             }
-
-
             function decreaseValue() {
                 var value = parseInt(document.getElementById('numberInput').value, 10);
                 value = isNaN(value) ? 0 : value;

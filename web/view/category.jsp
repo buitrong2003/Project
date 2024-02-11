@@ -211,7 +211,6 @@
                 let bookJSON = JSON.stringify(book);
                 let encodedBookJSON = encodeURIComponent(bookJSON);
                 let url = "details?book=" + encodedBookJSON;
-                
                 window.location.href = url;
             }
 
