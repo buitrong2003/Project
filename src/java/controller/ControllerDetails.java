@@ -7,11 +7,15 @@ package controller;
 import com.google.gson.Gson;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import model.Book;
 
 /**
@@ -21,15 +25,15 @@ import model.Book;
 public class ControllerDetails extends HttpServlet {
 
     /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
+     * Handles the HTTP <code>GET</code> method.
      *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String bookJSON = request.getParameter("book");
         if (bookJSON != null) {
@@ -42,21 +46,6 @@ public class ControllerDetails extends HttpServlet {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
-
     /**
      * Handles the HTTP <code>POST</code> method.
      *
@@ -65,10 +54,58 @@ public class ControllerDetails extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    List<Book> listCart = new ArrayList<>();
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String bookJSON = request.getParameter("book");
+        int quantity = Integer.parseInt(request.getParameter("quantityBook"));
+        if (bookJSON != null) {
+            bookJSON = URLDecoder.decode(bookJSON, StandardCharsets.UTF_8.name());
+            response.setContentType("application/json; charset=UTF-8");
+            Gson gson = new Gson();
+            Book book = gson.fromJson(bookJSON, Book.class);
+            boolean bookFound = false;
+            Book book_cart = new Book(book.getBook_id(),
+                    book.getName(), book.getAuthor(), book.getPublisher(),
+                    book.getPrice(), book.getDescription(),
+                    book.getGenre(), quantity, book.getPublication_date(),
+                    book.getImage(), book.getCategory_id(), book.getBook_hot());
+            if (listCart.size() >= 1) {
+                for (Book bookCart : listCart) {
+                    if (bookCart.getBook_id() == book_cart.getBook_id()) {
+                        int quantityCart = bookCart.getQuantity() + book_cart.getQuantity();
+                        if (quantityCart <= book.getQuantity()) {
+                            bookCart.setQuantity(quantityCart);
+                            book_cart.setQuantity(quantityCart);
+                        } else {
+                            book_cart.setQuantity(bookCart.getQuantity());
+                            request.setAttribute("error", "Số lượng bạn chọn đã đạt mức tối đa của sản phẩm này");
+                        }
+                        bookFound = true;
+                    } else {
+                        bookFound = false;
+                    }
+                }
+                if (!bookFound) {
+                    listCart.add(book_cart);
+                }
+            }
+            if (listCart.isEmpty()) {
+                listCart.add(book_cart);
+            }
+            if (quantity > book.getQuantity() - book_cart.getQuantity()) {
+                quantity = book.getQuantity() - book_cart.getQuantity();
+            }
+            String listCartJson = new Gson().toJson(listCart);
+            String encodedJson = URLEncoder.encode(listCartJson, "UTF-8");
+            Cookie cookie = new Cookie("listCartBook", encodedJson);
+            response.addCookie(cookie);
+            request.setAttribute("changeNumber", book.getQuantity() - book_cart.getQuantity());
+            request.setAttribute("numberBook", quantity);
+            request.setAttribute("book", book);
+            request.getRequestDispatcher("view/details.jsp").forward(request, response);
+        }
     }
 
     /**

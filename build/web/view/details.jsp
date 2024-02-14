@@ -292,7 +292,7 @@
 
                     <div class="quantity-container">
                         <input style="border: 1px solid #8A8B89" type="button" class="quantity-button" value="-" onclick="decreaseValue()">
-                        <input class="quantity-input" type="number" min="0" max="${requestScope.changeNumber == null ? book.quantity : requestScope.changeNumber}" value="0" id="numberInput">
+                        <input class="quantity-input" type="number" min="0" max="${requestScope.changeNumber == null ? book.quantity : requestScope.changeNumber}" value="${requestScope.numberBook == null ? 0 : requestScope.numberBook}" id="numberInput">
                         <input style="border: 1px solid #8A8B89"  type="button" class="quantity-button" value="+" onclick="increaseValue('${requestScope.changeNumber == null ? book.quantity : requestScope.changeNumber}')">
                     </div>
                     <div style="color: red" class="error">${requestScope.error}</div>
@@ -300,6 +300,10 @@
                         <button onclick="addToCart('${requestScope.book.getBook_id()}')" type = "button" class = "btn">
                             <input id="${requestScope.book.getBook_id()}" type="hidden" name="book" value="${requestScope.book}">
                             Add to Cart <i class = "fas fa-shopping-cart"></i>
+                            <form class="addCart" action="details" method="post">
+                                <input type="hidden" class="bookDetails" name="book">
+                                <input type="hidden" class="quantityDetails" name="quantityBook"/>
+                            </form>
                         </button>
                         <button type = "button" class = "btn">Compare</button>
                     </div>
@@ -349,7 +353,7 @@
                             book[key] = parseFloat(value);
                         } else if (key === 'publication_date') {
                             if (value === '--') {
-                                book[key] = null; 
+                                book[key] = null;
                             } else {
                                 const months = {'Jan': '01', 'Feb': '02', 'Mar': '03', 'Apr': '04', 'May': '05', 'Jun': '06', 'Jul': '07', 'Aug': '08', 'Sep': '09', 'Oct': '10', 'Nov': '11', 'Dec': '12'};
                                 const parts = value.split(' ');
@@ -369,11 +373,14 @@
                 let inputString = document.getElementById(id).value;
                 let bookCart = parseBookString(inputString);
                 let bookJSON = JSON.stringify(bookCart);
-                let numberFruit = document.querySelector('.quantity-input');
-                let numberChangeBook = numberFruit.max;
                 let encodedBookJSON = encodeURIComponent(bookJSON);
                 console.log(bookJSON);
-                window.location.href = "cart?book=" + encodedBookJSON + "&quantityBook=" + quantity + "&numberChange=" + numberChangeBook;
+                let addCart = document.querySelector('.addCart');
+                let bookDetails = document.querySelector('.bookDetails');
+                let quantityDetails = document.querySelector('.quantityDetails');         
+                bookDetails.value = encodedBookJSON;
+                quantityDetails.value = quantity;      
+                addCart.submit();                
             };
 
             function slideImage() {
