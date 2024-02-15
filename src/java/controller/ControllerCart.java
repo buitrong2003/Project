@@ -33,7 +33,7 @@ public class ControllerCart extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        
     }
 
     /**
@@ -68,11 +68,9 @@ public class ControllerCart extends HttpServlet {
                 listCartBook.add(book);
             }
         }
-        // In ra danh sách
-        for (Book book : listCartBook) {
-            response.getWriter().println(book);
-        }
-
+        request.setAttribute("listBookCart", listCartBook);
+        request.getRequestDispatcher("view/shoppingcart.jsp").forward(request, response);
+        
     }
 
     /**
