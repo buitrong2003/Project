@@ -292,7 +292,7 @@
 
                     <div class="quantity-container">
                         <input style="border: 1px solid #8A8B89" type="button" class="quantity-button" value="-" onclick="decreaseValue()">
-                        <input class="quantity-input" type="number" min="0" max="${requestScope.changeNumber == null ? book.quantity : requestScope.changeNumber}" value="${requestScope.numberBook == null ? 0 : requestScope.numberBook}" id="numberInput">
+                        <input class="quantity-input" type="number" min="0" max="${requestScope.changeNumber == null ? book.quantity : requestScope.changeNumber}" value="${requestScope.numberBook == null ? 1 : requestScope.numberBook}" id="numberInput">
                         <input style="border: 1px solid #8A8B89"  type="button" class="quantity-button" value="+" onclick="increaseValue('${requestScope.changeNumber == null ? book.quantity : requestScope.changeNumber}')">
                     </div>
                     <div style="color: red" class="error">${requestScope.error}</div>

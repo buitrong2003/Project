@@ -37,7 +37,7 @@ public class BookDAO extends GenericDAO<Book> {
                 + "b.description,b.genre,b.quantity,b.publication_date\n"
                 + ",b.image,b.book_hot,c.category_id,c.name as category_name\n"
                 + " FROM Book b join Category c on b.category_id = c.category_id\n"
-                + " WHERE [publication_date] >= DATEADD(DAY, - 40, GETDATE())\n"
+                + " WHERE [publication_date] >= DATEADD(DAY, - 50, GETDATE())\n"
                 + " ORDER BY [publication_date] DESC;";
         parameterMap = new LinkedHashMap<>();
         return queryGenericDAO(Book.class, sql, parameterMap);

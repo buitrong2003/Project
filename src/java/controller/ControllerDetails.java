@@ -11,12 +11,13 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.List;
 import model.Book;
+import model.User;
 
 /**
  *
@@ -54,10 +55,14 @@ public class ControllerDetails extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    List<Book> listCart = new ArrayList<>();
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        User user = (User) session.getAttribute("acount");
+        if (!ManageCart.listCartBook.containsKey(user.getUser_name())) {
+            ManageCart.listCartBook.put(user.getUser_name(), new ArrayList<>());
+        }
         String bookJSON = request.getParameter("book");
         int quantity = Integer.parseInt(request.getParameter("quantityBook"));
         if (bookJSON != null) {
@@ -71,8 +76,8 @@ public class ControllerDetails extends HttpServlet {
                     book.getPrice(), book.getDescription(),
                     book.getGenre(), quantity, book.getPublication_date(),
                     book.getImage(), book.getCategory_id(), book.getBook_hot());
-            if (listCart.size() >= 1) {
-                for (Book bookCart : listCart) {
+            if (ManageCart.listCartBook.get(user.getUser_name()).size() >= 1) {
+                for (Book bookCart : ManageCart.listCartBook.get(user.getUser_name())) {
                     if (bookCart.getBook_id() == book_cart.getBook_id()) {
                         int quantityCart = bookCart.getQuantity() + book_cart.getQuantity();
                         if (quantityCart <= book.getQuantity()) {
@@ -83,23 +88,28 @@ public class ControllerDetails extends HttpServlet {
                             request.setAttribute("error", "Số lượng bạn chọn đã đạt mức tối đa của sản phẩm này");
                         }
                         bookFound = true;
+                        break;
                     } else {
                         bookFound = false;
                     }
                 }
                 if (!bookFound) {
-                    listCart.add(book_cart);
+                    ManageCart.listCartBook.get(user.getUser_name()).add(book_cart);
                 }
             }
-            if (listCart.isEmpty()) {
-                listCart.add(book_cart);
+            if (ManageCart.listCartBook.get(user.getUser_name()).isEmpty()) {
+                ManageCart.listCartBook.get(user.getUser_name()).add(book_cart);
             }
             if (quantity > book.getQuantity() - book_cart.getQuantity()) {
                 quantity = book.getQuantity() - book_cart.getQuantity();
             }
-            String listCartJson = new Gson().toJson(listCart);
+            String listCartJson = new Gson().toJson(ManageCart.listCartBook.get(user.getUser_name()));
             String encodedJson = URLEncoder.encode(listCartJson, "UTF-8");
-            Cookie cookie = new Cookie("listCartBook", encodedJson);
+            Cookie cookie = new Cookie(user.getUser_name(), encodedJson);
+            Cookie quantityMax = new Cookie("maxQuantity" + book.getBook_id(), book.getQuantity() + "");
+            cookie.setPath("/");
+            quantityMax.setPath("/");
+            response.addCookie(quantityMax);
             response.addCookie(cookie);
             request.setAttribute("changeNumber", book.getQuantity() - book_cart.getQuantity());
             request.setAttribute("numberBook", quantity);

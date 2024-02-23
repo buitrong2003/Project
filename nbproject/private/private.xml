@@ -6,7 +6,8 @@
             <file>file:/C:/Users/d/Documents/GitHub/Project/web/view/shoppingcart.jsp</file>
             <file>file:/C:/Users/d/Documents/GitHub/Project/src/java/controller/ControllerBook.java</file>
             <file>file:/C:/Users/d/Documents/GitHub/Project/src/java/controller/ControllerDetails.java</file>
-            <file>file:/C:/Users/d/Documents/GitHub/Project/web/view/category.jsp</file>
+            <file>file:/C:/Users/d/Documents/GitHub/Project/src/java/filter/RoleAdmin.java</file>
+            <file>file:/C:/Users/d/Documents/GitHub/Project/src/java/controller/ManageCart.java</file>
             <file>file:/C:/Users/d/Documents/GitHub/Project/src/java/controller/ControllerCart.java</file>
         </group>
     </open-files>

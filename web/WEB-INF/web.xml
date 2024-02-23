@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
+    <filter>
+        <filter-name>RoleAdmin</filter-name>
+        <filter-class>filter.RoleAdmin</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>RoleAdmin</filter-name>
+        <url-pattern>/home</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>RoleAdmin</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
     <servlet>
         <servlet-name>ControllerBook</servlet-name>
         <servlet-class>controller.ControllerBook</servlet-class>
@@ -16,6 +28,14 @@
         <servlet-name>ControllerCart</servlet-name>
         <servlet-class>controller.ControllerCart</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ControllerSignIn</servlet-name>
+        <servlet-class>controller.ControllerSignIn</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ControllerSignUp</servlet-name>
+        <servlet-class>controller.ControllerSignUp</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ControllerBook</servlet-name>
         <url-pattern>/home</url-pattern>
@@ -31,5 +51,13 @@
     <servlet-mapping>
         <servlet-name>ControllerCart</servlet-name>
         <url-pattern>/cart</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ControllerSignIn</servlet-name>
+        <url-pattern>/login</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ControllerSignUp</servlet-name>
+        <url-pattern>/register</url-pattern>
     </servlet-mapping>
 </web-app>

@@ -132,8 +132,8 @@
                     <c:if test="${sessionScope.acount != null}">
                         <div id="accountInfo" class="account-info">                               
                             <div style="display: flex;margin-top: 5%;cursor: pointer">
-                                <img src="../image/user.png"  alt="">
-                                <div style="margin-left: 10%;">${sessionScope.acount.getAcount().getUser_name()}</div>
+                                <img src="image/user.png"  alt="">
+                                <div style="margin-left: 10%;">${sessionScope.acount.getUser_name()}</div>
                                 <div class="hidden-content">
                                     <div class="arrow-up"></div>
                                     <div style="width: 100%;margin-top: 5%">Tài khoản của tôi</div>
@@ -159,7 +159,7 @@
             </div>
         </div>
         <form action="cart" method="post" class="get-to-cart">
-            
+
         </form>
         <script>
             document.querySelectorAll('.hidden-content div').forEach(item => {
@@ -172,17 +172,17 @@
                 });
             });
             var getLogout = () => {
-                window.location.href = "../signin";
+                window.location.href = "login";
             };
             var getSignUp = () => {
-                window.location.href = "../signup";
+                window.location.href = "register";
             };
             var getSignIn = () => {
-                window.location.href = "../signin";
+                window.location.href = "login";
             };
             var getToCart = () => {
-              let cart = document.querySelector('.get-to-cart');
-              cart.submit();
+                let cart = document.querySelector('.get-to-cart');
+                cart.submit();
             };
         </script>
     </body>
