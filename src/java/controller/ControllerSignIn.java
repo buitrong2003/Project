@@ -4,8 +4,8 @@
  */
 package controller;
 
-import dal.AcountDAO;
-import dal.UserRoleDAO;
+import dal.implement.AcountDAO;
+import dal.implement.UserRoleDAO;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -37,7 +37,7 @@ public class ControllerSignIn extends HttpServlet {
         if (session != null) {
             session.invalidate();
         }
-        request.getRequestDispatcher("view/signInUser.jsp").forward(request, response);
+        request.getRequestDispatcher("view/user/signInUser.jsp").forward(request, response);
     }
 
     /**

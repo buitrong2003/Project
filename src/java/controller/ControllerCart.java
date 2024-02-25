@@ -5,7 +5,7 @@
 package controller;
 
 import com.google.gson.Gson;
-import dal.BookDAO;
+import dal.implement.BookDAO;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -76,7 +76,6 @@ public class ControllerCart extends HttpServlet {
             String raw_page = request.getParameter("page") == null ? "1" : request.getParameter("page");
             int page = Integer.parseInt(raw_page);
             int totalPages = listCartBook.size() / limit + (listCartBook.size() % limit == 0 ? 0 : 1);
-            
             if (page > totalPages) {
                 page = page - 1; // Điều chỉnh số trang nếu trang hiện tại vượt quá tổng số trang sau khi xóa
             }
@@ -126,7 +125,7 @@ public class ControllerCart extends HttpServlet {
         String raw_page = request.getParameter("page") == null ? "1" : request.getParameter("page");
         int page = Integer.parseInt(raw_page);
         int limitPage = listCartBook.size() / limit + (listCartBook.size() % limit == 0 ? 0 : 1);
-        
+
         if (limitPage > 1) {
             listCartBook = daoBook.getListBookPagination(page, limit, listCartBook);
         }

@@ -4,8 +4,8 @@
  */
 package controller;
 
-import dal.BookDAO;
-import dal.CategoryDAO;
+import dal.implement.BookDAO;
+import dal.implement.CategoryDAO;
 import java.io.IOException;
 
 import jakarta.servlet.ServletException;

@@ -14,70 +14,12 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" rel="stylesheet" />
         <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-        <style>
-            body{
-                background: #ddb5b5;
-            }
-            .cart{
-                margin: 20px 0;
-                background-color: #F6F5FA;
-                ;
-                padding: 60px 0;
-            }
-            .total-price{
-                padding-bottom: 15px;
-            }
-            .cart-item{
-                background-color: #fff;
-                border-radius: 10px;
-                padding: 15px 20px;
-                margin-bottom: 20px;
-            }
-            .center-item{
-                display: flex;
-                align-items: center;
-                justify-content: flex-start;
-            }
-            .cart-item img{
-                width: 115px;
-            }
-            .cart-item h5{
-                padding: 0 10%;
-            }
-            .cart-item .remove-item{
-                width: 25px!important;
-            }
-            .btn-default{
-                background-color: #fff;
-            }
-            .cart-item .form-control{
-                background-color: #F6F5FA;
-                border: none;
-                width: 65px;
-                border-radius: 10px!important;
-                font-weight: 700;
-                font-size: 20px;
-            }
-            .input-group{
-                width: unset;
-                flex-wrap: nowrap;
-            }
-            .status{
-                text-align: right;
-            }
-            .check-out{
-                float: right;
-                padding: 10px 30px;
-                font-size: 19px;
-                background-color: #2FBE70;
-                border: none;
-            }
-        </style>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/shoppingcart.css"/>
     </head>
     <body>
         <section>
             <div class="container">
-                <%@include file="header.jsp" %>
+                <%@include file="common/header.jsp" %>
                 <div style="margin-top: 7%" class="cart row">
                     <div class="col-md-9">
                         <div class="cart-item">
@@ -173,70 +115,6 @@
                 </div>
             </div>
         </section>
-        <script>
-            function updateCookie(bookId, newValue) {
-                document.cookie = 'quantity_' + bookId + '=' + newValue + ';path=/';
-                console.log(newValue);
-            }
-            function nextPageButton() {
-                const currentPage = parseInt('${requestScope.page}');
-                const limitPage = parseInt("${requestScope.limitPage}");
-                if (currentPage < limitPage) {
-                    getPage(currentPage + 1);
-                }
-            }
-            function prevPageButton() {
-                const currentPage = parseInt('${requestScope.page}');
-                if (currentPage > 1) {
-                    getPage(currentPage - 1);
-                }
-            }
-            function getPage(index) {
-                let formIndex = document.getElementById(index);
-                formIndex.submit();
-            }
-            function getInputvalue(product) {
-                const productInput = document.getElementById(product + '-number');
-                const productNumber = parseInt(productInput.value);
-                return productNumber;
-            }
-            function calculateTotal() {
-                const phoneTotal = getInputvalue('phone') * 1219;
-                const caseTotal = getInputvalue('case') * 59;
-                const subTotal = phoneTotal + caseTotal;
-                const tax = subTotal / 10;
-                const totalPrice = subTotal + tax;
-                document.getElementById('sub-total').innerText = subTotal;
-                document.getElementById('tax-amount').innerText = tax;
-                document.getElementById('total-price').innerText = totalPrice;
-            }
-            var plusQuantity = (id) => {
-                var input = document.getElementById('case-number' + id);
-                var maxValue = parseInt(input.getAttribute('max'));
-                var currentValue = parseInt(input.value);
-                if (currentValue < maxValue) {
-                    input.value = currentValue + 1;
-                }
-            };
-            var minusQuantity = (id) => {
-                var input = document.getElementById('case-number' + id);
-                var minValue = 0;
-                var currentValue = parseInt(input.value);
-                if (currentValue > minValue) {
-                    input.value = currentValue - 1;
-                }
-            };
-            var getPriceBook = (price, id) => {
-                const phoneTotal = document.getElementById('phone-total' + id);
-                let quantity = document.getElementById('case-number' + id);
-                let totalPrice = parseInt(price) * parseInt(quantity.value);
-                var formattedPrice = totalPrice.toLocaleString('en-US', {minimumFractionDigits: 0});
-                formattedPrice = formattedPrice.replace(/,/g, '.');
-                phoneTotal.innerHTML = '₫' + formattedPrice;
-            };
-            var getDelete = (id) => {
-                window.location.href = 'cart?id=' + id + '&page=${requestScope.page}';
-            };
-        </script>
+        <script src="${pageContext.request.contextPath}/js/shoppingcart.js"></script>
     </body>
 </html>

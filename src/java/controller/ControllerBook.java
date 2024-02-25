@@ -4,7 +4,7 @@
  */
 package controller;
 
-import dal.BookDAO;
+import dal.implement.BookDAO;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;

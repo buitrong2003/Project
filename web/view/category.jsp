@@ -13,14 +13,10 @@
         <title>JSP Page</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     </head>
-    <style>
-        .hover-scale:hover {
-            transform: scale(1.05);
-        }
-    </style>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/category.css"/>
     <body style=" background-color: #EBEBEB">
         <div id="wrapper">
-            <%@include file="header.jsp" %>
+            <%@include file="common/header.jsp" %>
             <div style="display: flex;width: 85%;margin: 0 auto;margin-top: 7%;gap: 5%">
                 <div style="width: 25%;box-shadow: 0px 0px 10px rgba(0,0,0,0);">
                     <div style="cursor: pointer;background-color: #00B9F2;color: white;padding-top: 5%;padding-bottom: 5%;text-indent: 5%;border-top-left-radius: 6px;border-top-right-radius: 6px">
@@ -42,7 +38,6 @@
                                 ${category.name}
                             </div>
                         </c:forEach>
-
                     </div>
                 </div>
                 <div class="container">
@@ -72,7 +67,9 @@
                             <button onclick="performSearch()" class="btn btn-primary">Search</button>
                         </div>
                         <div class="col-md-2">
-                            <select class="form-control form-sort" onchange="sortByBook()">
+                            <select class="form-control form-sort" onchange="sortByBook('${requestScope.keywordNameSearch}',
+                                            '${requestScope.keywordCategory}', '${requestScope.action}',
+                                            '${requestScope.option}', '${requestScope.page}')">
                                 <option class="sort" ${requestScope.sortBook eq "keepStable" ? 'selected="selected"' : ''} value="keepStable">Sắp Xếp</option>
                                 <option class="sort" ${requestScope.sortBook eq "ascending" ? 'selected="selected"' : ''} value="ascending">Tăng dần theo giá</option>
                                 <option class="sort" ${requestScope.sortBook eq "decrease" ? 'selected="selected"' : ''} value="decrease">Giảm dần theo giá</option>
@@ -121,9 +118,10 @@
                 <input type="hidden" name="keyCategory" value="${requestScope.keywordCategory}"/>
                 <input type="hidden" name="action" class="action-category">
             </form>
-
-            <div style="display: flex;justify-content: center;gap: 0.5%">
-                ${requestScope.page <= 1 ? "" : "<div class=\"prev\" onclick=\"prevPageButton()\" style=\"min-width: 40px;height: 30px;display: block;line-height: 30px;text-align: center;cursor: pointer;color: #999999;box-shadow: 0px 0px 10px rgba(0,0,0,0);background-color: white;border: 1px solid #999999;background-color 0.3s ease;\" onmouseover=\"this.style.backgroundColor='#CCCCCC'; this.style.color='#5E7F9D';\" onmouseout=\"this.style.backgroundColor='#FFFFFF'; this.style.color='#999999';\"><</div>"}
+            <div style="display: flex; justify-content: center; gap: 0.5%;">
+                <c:if test="${requestScope.page > 1}">
+                    <div class="prev" onclick="prevPageButton('${requestScope.page}', '${requestScope.keywordNameSearch}', '${requestScope.keywordCategory}', '${requestScope.action}', '${requestScope.option}')" style="min-width: 40px; height: 30px; display: block; line-height: 30px; text-align: center; cursor: pointer; color: #999999; box-shadow: 0px 0px 10px rgba(0,0,0,0); background-color: white; border: 1px solid #999999; transition: background-color 0.3s ease;" onmouseover="this.style.backgroundColor = '#CCCCCC'; this.style.color = '#5E7F9D';" onmouseout="this.style.backgroundColor = 'white'; this.style.color = '#999999';"><</div>
+                </c:if>
                 <c:forEach var="index" begin="1" end="${requestScope.limitPage}">
                     <c:if test="${requestScope.limitPage > 1}">
                         <c:choose>
@@ -138,82 +136,12 @@
                         </c:choose>
                     </c:if>
                 </c:forEach>
-                ${requestScope.page == requestScope.limitPage || requestScope.limitPage <= 1 ? "" : "<div class=\"next\" onclick=\"nextPageButton()\" style=\"min-width: 40px;height: 30px;display: block;line-height: 30px;text-align: center;cursor: pointer;box-shadow: 0px 0px 10px rgba(0,0,0,0);background-color: white;border: 1px solid #999999;color: #999999;background-color 0.3s ease;\"  onmouseover=\"this.style.backgroundColor='#CCCCCC'; this.style.color='#5E7F9D';\" onmouseout=\"this.style.backgroundColor='#FFFFFF'; this.style.color='#999999';\">></div>"}
+                <c:if test="${requestScope.page lt requestScope.limitPage && requestScope.limitPage > 1}">
+                    <div class="next" onclick="nextPageButton('${requestScope.page}', '${requestScope.limitPage}', '${requestScope.keywordNameSearch}', '${requestScope.keywordCategory}', '${requestScope.action}', '${requestScope.option}')" style="min-width: 40px; height: 30px; display: block; line-height: 30px; text-align: center; cursor: pointer; box-shadow: 0px 0px 10px rgba(0,0,0,0); background-color: white; border: 1px solid #999999; color: #999999; transition: background-color 0.3s ease;" onmouseover="this.style.backgroundColor = '#CCCCCC'; this.style.color = '#5E7F9D';" onmouseout="this.style.backgroundColor = 'white'; this.style.color = '#999999';">></div>
+                </c:if>
             </div>
         </div>
-        <script>
-            var sortByBook = () => {
-                let parameter = document.querySelector('.form-sort');
-                window.location.href = "category?name=${requestScope.keywordNameSearch}&keyCategory=${requestScope.keywordCategory}&action=${requestScope.action}&option=${requestScope.option}&page=${requestScope.page}&sortBy=" + parameter.value;
-            };
-            function nextPageButton() {
-                const currentPage = parseInt('${requestScope.page}');
-                const limitPage = parseInt("${requestScope.limitPage}");
-                if (currentPage < limitPage) {
-                    window.location.href = "category?page=" + (currentPage + 1) + "&name=${requestScope.keywordNameSearch}&keyCategory=${requestScope.keywordCategory}&action=${requestScope.action}&option=${requestScope.option}";
-                }
-            }
-            function prevPageButton() {
-                const currentPage = parseInt('${requestScope.page}');
-                if (currentPage > 1) {
-                    window.location.href = "category?page=" + (currentPage - 1) + "&name=${requestScope.keywordNameSearch}&keyCategory=${requestScope.keywordCategory}&action=${requestScope.action}&option=${requestScope.option}";
-                }
-            }
-            var getCategory = (category) => {
-                let menuCategory = document.querySelector('.menu-category');
-                let nameCategory = document.querySelector('.name');
-                let action = document.querySelector('.action-category');
-                action.value = "category";
-                nameCategory.name = 'keyCategory';
-                nameCategory.value = category;
-                menuCategory.action = "category";
-                menuCategory.submit();
-            };
-            var performSearch = () => {
-                let keyword = document.getElementById('searchInput');
-                if (keyword.value.length !== 0) {
-                    let menuCategory = document.querySelector('.menu-category');
-                    let nameCategory = document.querySelector('.name');
-                    let action = document.querySelector('.action-category');
-                    let option = document.getElementById('chooseOption');
-                    let optionSearch = document.querySelector('.optionSearch');
-                    optionSearch.value = option.value;
-                    action.value = "search";
-                    nameCategory.name = 'name';
-                    nameCategory.value = keyword.value;
-                    menuCategory.action = "category";
-                    menuCategory.submit();
-                }
-            };
-
-            function getDetails(id) {
-                function parseBookString(inputString) {
-                    let book = {};
-                    inputString.match(/(\w+)=(.+?)(?=\s\w+=|$)/g).forEach(match => {
-                        let [key, value] = match.split('=');
-                        value = value.replace(/,/g, '');
-                        if (key === 'book_id' || key === 'quantity' || key === 'category_id' || key === 'book_hot') {
-                            book[key] = parseInt(value);
-                        } else if (key === 'price') {
-                            book[key] = parseFloat(value);
-                        } else if (key === 'publication_date') {
-                            let date = new Date(value);
-                            let formattedDateString = date.toISOString().slice(0, 10);
-                            book[key] = formattedDateString;
-                        } else {
-                            book[key] = value;
-                        }
-                    });
-                    return book;
-                }
-                let inputString = document.getElementById(id).value;
-                let book = parseBookString(inputString);
-                let bookJSON = JSON.stringify(book);
-                let encodedBookJSON = encodeURIComponent(bookJSON);
-                let url = "details?book=" + encodedBookJSON;
-                window.location.href = url;
-            }
-
-        </script>
-    </body>
+    </div>
+    <script src="${pageContext.request.contextPath}/js/category.js"></script>
+</body>
 </html>

@@ -1,0 +1,30 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Feb 25, 2024, 11:19:08 PM
+    Author     : d
+*/
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;1,200;1,400;1,500&display=swap');
+        #wp-products {
+            padding-top:116px;
+            padding-bottom: 78px;
+            padding-left:134px;
+            padding-right:134px;
+        }
+
+        #wp-products h2 {
+            text-align: center;
+            margin-bottom: 76px;
+            font-size:32px;
+            color:#626a67;
+        }
+        .hover-scale:hover {
+            transform: scale(1.05);
+        }
+        .categoty-book:hover {
+            background-color: #F7941D; /* Màu nền xanh khi hover */
+            color: #ffffff; /* Màu chữ trắng khi hover */
+
+        }

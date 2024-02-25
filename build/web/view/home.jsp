@@ -13,33 +13,10 @@
         <title>JSP Page</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     </head>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;1,200;1,400;1,500&display=swap');
-        #wp-products {
-            padding-top:116px;
-            padding-bottom: 78px;
-            padding-left:134px;
-            padding-right:134px;
-        }
-
-        #wp-products h2 {
-            text-align: center;
-            margin-bottom: 76px;
-            font-size:32px;
-            color:#626a67;
-        }
-        .hover-scale:hover {
-            transform: scale(1.05);
-        }
-        .categoty-book:hover {
-            background-color: #F7941D; /* Màu nền xanh khi hover */
-            color: #ffffff; /* Màu chữ trắng khi hover */
-
-        }
-    </style>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/home.css"/>
     <body>
         <div id="wrapper">
-            <%@include file="header.jsp" %>
+            <%@include file="common/header.jsp" %>
             <div style="width: 100%;overflow: hidden;margin-top: -4%">
                 <div class="image-wapper" style="margin-top: 9%; display: flex;transition: 0.5s" >
                     <img class="banner-image" style="width: 100%;cursor: pointer" src="https://images-production.bookshop.org/spree/promo_banner_slides/desktop_images/294/original/YIB-HERO-Bookshop-Ad-2048x600-New-Jan24.jpg?1705419249" alt="Banner Image 1">
@@ -54,7 +31,6 @@
                     <div class="row" id="handleChange" style="display: inline-block; white-space: nowrap; overflow-x: auto; padding: 10px 0;width: 100%;transition: 0.5s">
                         <c:forEach items="${requestScope.listBookHot}" var="bookHot">
                             <img class="hover-scale" src="image/${bookHot.image}" style="display: inline-block; vertical-align: top; height: 50vh;width: 20%;cursor: pointer;z-index: 1;border-radius: 20px;transition: transform 0.3s ease-in-out;"/>
-
                         </c:forEach>
                     </div>
                     <h1 onclick="getChange(1)" style="position: absolute; right: 10%; top: 50%; transform: translateY(-50%); z-index: 2; background: none; border: none; font-size: 24px; cursor: pointer;width: 40px; height: 40px; border-radius: 50%; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); display: flex; justify-content: center; align-items: center; background: white;color: #573BA2">></h1>
@@ -98,6 +74,6 @@
                 </div>
             </div>
         </div>
-        <script src="view/home.js"></script>
+        <script src="${pageContext.request.contextPath}/js/home.js"></script>
     </body>
 </html>
