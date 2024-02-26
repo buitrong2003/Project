@@ -6,15 +6,15 @@ function updateCookie(bookId, newValue) {
     document.cookie = 'quantity_' + bookId + '=' + newValue + ';path=/';
     console.log(newValue);
 }
-function nextPageButton() {
-    const currentPage = parseInt('${requestScope.page}');
-    const limitPage = parseInt("${requestScope.limitPage}");
+function nextPageButtonShoppingCart(page, limitPageCart) {
+    const currentPage = parseInt(page);
+    const limitPage = parseInt(limitPageCart);
     if (currentPage < limitPage) {
         getPage(currentPage + 1);
     }
 }
-function prevPageButton() {
-    const currentPage = parseInt('${requestScope.page}');
+function prevPageButtonShoppingCart(page) {
+    const currentPage = parseInt(page);
     if (currentPage > 1) {
         getPage(currentPage - 1);
     }
@@ -62,7 +62,7 @@ var getPriceBook = (price, id) => {
     formattedPrice = formattedPrice.replace(/,/g, '.');
     phoneTotal.innerHTML = '₫' + formattedPrice;
 };
-var getDelete = (id) => {
-    window.location.href = 'cart?id=' + id + '&page=${requestScope.page}';
+var getDelete = (id, page) => {
+    window.location.href = 'cart?id=' + id + '&page=' + page;
 };
 

@@ -141,7 +141,6 @@
                 </c:if>
             </div>
         </div>
-    </div>
     <script src="${pageContext.request.contextPath}/js/category.js"></script>
 </body>
 </html>
