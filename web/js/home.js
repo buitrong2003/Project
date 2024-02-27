@@ -20,6 +20,35 @@ function getChange(direction) {
     var scrollAmount = direction * (container.offsetWidth / 5); // Adjust the divisor based on how many books you want to move per click
     container.scrollBy({left: scrollAmount, behavior: 'smooth'});
 }
+function getDetailsHome(id) {
+    function parseBookString(inputString) {
+        let book = {};
+        inputString.match(/(\w+)=(.+?)(?=\s\w+=|$)/g).forEach(match => {
+            let [key, value] = match.split('=');
+            value = value.replace(/,/g, '');
+            if (key === 'book_id' || key === 'quantity' || key === 'category_id' || key === 'book_hot') {
+                book[key] = parseInt(value);
+            } else if (key === 'price') {
+                book[key] = parseFloat(value);
+            } else if (key === 'publication_date') {
+                let date = new Date(value);
+                let formattedDateString = date.toISOString().slice(0, 10);
+                book[key] = formattedDateString;
+            } else {
+                book[key] = value;
+            }
+        });
+        return book;
+    }
+    let inputString = document.getElementById(id).value;
+    let book = parseBookString(inputString);
+    let bookJSON = JSON.stringify(book);
+    let encodedBookJSON = encodeURIComponent(bookJSON);
+    let url = "details?book=" + encodedBookJSON;
+    window.location.href = url;
+}
+
+
 
 
 

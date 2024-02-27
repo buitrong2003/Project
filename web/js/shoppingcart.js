@@ -3,8 +3,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/JavaScript.js to edit this template
  */
 function updateCookie(bookId, newValue) {
-    document.cookie = 'quantity_' + bookId + '=' + newValue + ';path=/';
-    console.log(newValue);
+    // Tên cookie cần được cập nhật
+    var cookieName = "caseNumber" + bookId;
+    // Thời gian hết hạn của cookie (ở đây tôi sẽ đặt cookie này hết hạn sau 1 giờ)
+    //var expirationDate = new Date();
+    //expirationDate.setTime(expirationDate.getTime() + (1 * 60 * 60 * 1000)); // 1 giờ
+    // Cập nhật giá trị của cookie
+    //";expires=" + expirationDate.toUTCString()
+    document.cookie = cookieName + "=" + newValue  + ";path=/";
 }
 function nextPageButtonShoppingCart(page, limitPageCart) {
     const currentPage = parseInt(page);
@@ -44,6 +50,8 @@ var plusQuantity = (id) => {
     var currentValue = parseInt(input.value);
     if (currentValue < maxValue) {
         input.value = currentValue + 1;
+        let newValue = currentValue + 1;
+        updateCookie(id, newValue);
     }
 };
 var minusQuantity = (id) => {
@@ -52,6 +60,8 @@ var minusQuantity = (id) => {
     var currentValue = parseInt(input.value);
     if (currentValue > minValue) {
         input.value = currentValue - 1;
+        let newValue = currentValue - 1;
+        updateCookie(id, newValue);
     }
 };
 var getPriceBook = (price, id) => {

@@ -16,7 +16,7 @@
 
     <body style=" background-color: #EBEBEB">
         <%@include file="common/header.jsp" %>
-        <div class = "card-wrapper">
+        <div class = "card-wrapper" style="margin-bottom: 6%">
             <div style="margin-top: 20%" class = "row">
                 <!-- card left -->
                 <div class = "product-imgs col-md-6">
@@ -65,7 +65,6 @@
                                 </script>
                             </div>
                         </div>
-
                     </div>
                     <c:set var="changeQuantityMaxBookCartValue" value="" />
                     <c:forEach var="cCookie" items="${pageContext.request.cookies}">
@@ -90,28 +89,13 @@
                         </button>
                         <button type = "button" class = "btn">Compare</button>
                     </div>
-
-                    <div class = "social-links">
-                        <p>Share At: </p>
-                        <a href = "#">
-                            <i class = "fab fa-facebook-f"></i>
-                        </a>
-                        <a href = "#">
-                            <i class = "fab fa-twitter"></i>
-                        </a>
-                        <a href = "#">
-                            <i class = "fab fa-instagram"></i>
-                        </a>
-                        <a href = "#">
-                            <i class = "fab fa-whatsapp"></i>
-                        </a>
-                        <a href = "#">
-                            <i class = "fab fa-pinterest"></i>
-                        </a>
-                    </div>
                 </div>
             </div>
         </div>
+        <div>
+            <%@include file="common/footer.jsp" %>
+        </div>
         <script src="${pageContext.request.contextPath}/js/details.js"></script>
     </body>
+
 </html>

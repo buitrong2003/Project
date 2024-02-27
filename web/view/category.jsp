@@ -15,7 +15,7 @@
     </head>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/category.css"/>
     <body style=" background-color: #EBEBEB">
-        <div id="wrapper">
+        <div id="wrapper" style="margin-bottom: 2%">
             <%@include file="common/header.jsp" %>
             <div style="display: flex;width: 85%;margin: 0 auto;margin-top: 7%;gap: 5%">
                 <div style="width: 25%;box-shadow: 0px 0px 10px rgba(0,0,0,0);">
@@ -23,20 +23,21 @@
                         <i class='bx bx-menu'></i>
                         Danh mục
                     </div>
-                    <div>
-                        <div class="categoty-book" style="cursor: pointer; background-color: ${requestScope.keywordCategory eq 'tat-ca' ? '#F7941D' : 'white'};border-bottom: 1px solid #EFEFEF;padding: 6% 0px;text-indent: 5%;color: ${requestScope.keywordCategory eq 'tat-ca' ? 'white' : 'black'};" onclick="getCategory('tat-ca')">Tất cả</div>
+                    <div>                        
                         <c:forEach items="${requestScope.listCategory}" var="category" varStatus="loopStatus">
-                            <div class="category-book" onclick="getCategory('${category.name}')" 
-                                 style="cursor: pointer;
-                                 background-color: ${requestScope.keywordCategory eq category.name ? '#F7941D' : 'white'};
-                                 border-bottom: ${loopStatus.last ? 'none' : '1px solid #EFEFEF'};
-                                 border-bottom-left-radius: ${loopStatus.last ? '6px' : '0'};
-                                 border-bottom-right-radius: ${loopStatus.last ? '6px' : '0'};
-                                 padding: 6% 0px;
-                                 text-indent: 5%;
-                                 color: ${requestScope.keywordCategory eq category.name ? 'white' : 'black'}">
-                                ${category.name}
-                            </div>
+                            <a href="category?search=category&categoryid=${category.category_id}">
+                                <div class="category-book" 
+                                     style="cursor: pointer;
+                                     background-color: white;
+                                     border-bottom: ${loopStatus.last ? 'none' : '1px solid #EFEFEF'};
+                                     border-bottom-left-radius: ${loopStatus.last ? '6px' : '0'};
+                                     border-bottom-right-radius: ${loopStatus.last ? '6px' : '0'};
+                                     padding: 6% 0px;
+                                     text-indent: 5%;
+                                     color: black">
+                                    ${category.name}
+                                </div>
+                            </a>
                         </c:forEach>
                     </div>
                 </div>
@@ -55,21 +56,19 @@
                                            this.style.borderColor = '#ddd';" 
                                    onkeyup="if (event.keyCode === 13) {
                                                performSearch();
-                                           }" value="${requestScope.keywordNameSearch == null ? "" : requestScope.keywordNameSearch}">
+                                           }" value="${requestScope.keyword == null ? "" : requestScope.keyword}">
                         </div>
                         <div class="col-md-2">
                             <select class="form-control" id="chooseOption">
-                                <option ${requestScope.option eq "Name" ? 'selected="selected"' : ''}>Name</option>
-                                <option ${requestScope.option eq "Author" ? 'selected="selected"' : ''}>Author</option>
+                                <option value="Name" ${requestScope.option eq "Name" ? 'selected="selected"' : ''}>Name</option>
+                                <option value="Author" ${requestScope.option eq "Author" ? 'selected="selected"' : ''}>Author</option>
                             </select>
                         </div>
                         <div class="col-md-3">
                             <button onclick="performSearch()" class="btn btn-primary">Search</button>
                         </div>
                         <div class="col-md-2">
-                            <select class="form-control form-sort" onchange="sortByBook('${requestScope.keywordNameSearch}',
-                                            '${requestScope.keywordCategory}', '${requestScope.action}',
-                                            '${requestScope.option}', '${requestScope.page}')">
+                            <select class="form-control form-sort" onchange="sortByBook('${requestScope.pageControl.page}', '${requestScope.pageControl.urlPattern}')">
                                 <option class="sort" ${requestScope.sortBook eq "keepStable" ? 'selected="selected"' : ''} value="keepStable">Sắp Xếp</option>
                                 <option class="sort" ${requestScope.sortBook eq "ascending" ? 'selected="selected"' : ''} value="ascending">Tăng dần theo giá</option>
                                 <option class="sort" ${requestScope.sortBook eq "decrease" ? 'selected="selected"' : ''} value="decrease">Giảm dần theo giá</option>
@@ -82,7 +81,7 @@
                                         <img class="hover-scale" onclick="getDetails('${book.getBook_id()}')"
                                              style="transition: transform 0.3s ease-in-out;height: 35vh;border-radius: 6px;width: 100%;cursor: pointer;margin-top: 10%;" src="image/${book.image}" alt="alt"/>
                                         <input id="${book.getBook_id()}" type="hidden" name="book" value="${book}">
-                                        <div style="margin-top: 5%;height: 8vh;font-weight: 500" class="truncate">${book.name}</div>
+                                        <div style="margin-top: 5%;height: 8vh;font-weight: 500;cursor: pointer" onclick="getDetails('${book.getBook_id()}')" class="truncate book-category">${book.name}</div>
                                         <div style="width: 100%">
                                             <div style="font-size: 80%">${book.author}</div>
                                         </div>
@@ -112,35 +111,30 @@
                     </div>
                 </div>
             </div>
-            <form class="menu-category">
-                <input type="hidden" class="name" />
-                <input type="hidden" name="option" class="optionSearch"/>
-                <input type="hidden" name="keyCategory" value="${requestScope.keywordCategory}"/>
-                <input type="hidden" name="action" class="action-category">
-            </form>
             <div style="display: flex; justify-content: center; gap: 0.5%;">
-                <c:if test="${requestScope.page > 1}">
-                    <div class="prev" onclick="prevPageButton('${requestScope.page}', '${requestScope.keywordNameSearch}', '${requestScope.keywordCategory}', '${requestScope.action}', '${requestScope.option}')" style="min-width: 40px; height: 30px; display: block; line-height: 30px; text-align: center; cursor: pointer; color: #999999; box-shadow: 0px 0px 10px rgba(0,0,0,0); background-color: white; border: 1px solid #999999; transition: background-color 0.3s ease;" onmouseover="this.style.backgroundColor = '#CCCCCC'; this.style.color = '#5E7F9D';" onmouseout="this.style.backgroundColor = 'white'; this.style.color = '#999999';"><</div>
+                <c:if test="${requestScope.pageControl.page > 1}">
+                    <div class="prev" onclick="prevPageButton('${requestScope.pageControl.page}', '${requestScope.pageControl.urlPattern}')" style="min-width: 40px; height: 30px; display: block; line-height: 30px; text-align: center; cursor: pointer; color: #999999; box-shadow: 0px 0px 10px rgba(0,0,0,0); background-color: white; border: 1px solid #999999; transition: background-color 0.3s ease;" onmouseover="this.style.backgroundColor = '#CCCCCC'; this.style.color = '#5E7F9D';" onmouseout="this.style.backgroundColor = 'white'; this.style.color = '#999999';"><</div>
                 </c:if>
-                <c:forEach var="index" begin="1" end="${requestScope.limitPage}">
-                    <c:if test="${requestScope.limitPage > 1}">
+                <c:forEach var="index" begin="1" end="${requestScope.pageControl.totalPage}">
+                    <c:if test="${requestScope.pageControl.totalPage > 1}">
                         <c:choose>
-                            <c:when test="${index == requestScope.page}">
-                                <a style="text-decoration: none;color: white;min-width: 40px;height: 30px;display: block;line-height: 30px;text-align: center;background-color: #00A5F0" href="category?page=${index}&name=${requestScope.keywordNameSearch}&keyCategory=${requestScope.keywordCategory}&action=${requestScope.action}&option=${requestScope.option}">${index}</a> 
+                            <c:when test="${index == requestScope.pageControl.page}">
+                                <a style="text-decoration: none;color: white;min-width: 40px;height: 30px;display: block;line-height: 30px;text-align: center;background-color: #00A5F0" href="category${requestScope.pageControl.urlPattern}page=${index}">${index}</a> 
                             </c:when>
                             <c:otherwise>
-                                <a class="pageContent" href="category?page=${index}&name=${requestScope.keywordNameSearch}&keyCategory=${requestScope.keywordCategory}&action=${requestScope.action}&option=${requestScope.option}" style="text-decoration: none;color: #999999;min-width: 40px;height: 30px;display: block;line-height: 30px;text-align: center;box-shadow: 0px 0px 10px rgba(0,0,0,0);border: 1px solid #999999; background-color: #FFFFFF; transition: background-color 0.3s ease;" onmouseover="this.style.backgroundColor = '#CCCCCC'; this.style.color = '#5E7F9D';" onmouseout="this.style.backgroundColor = '#FFFFFF'; this.style.color = '#999999';">
+                                <a class="pageContent" href="category${requestScope.pageControl.urlPattern}page=${index}" style="text-decoration: none;color: #999999;min-width: 40px;height: 30px;display: block;line-height: 30px;text-align: center;box-shadow: 0px 0px 10px rgba(0,0,0,0);border: 1px solid #999999; background-color: #FFFFFF; transition: background-color 0.3s ease;" onmouseover="this.style.backgroundColor = '#CCCCCC'; this.style.color = '#5E7F9D';" onmouseout="this.style.backgroundColor = '#FFFFFF'; this.style.color = '#999999';">
                                     ${index}
                                 </a>
                             </c:otherwise>
                         </c:choose>
                     </c:if>
                 </c:forEach>
-                <c:if test="${requestScope.page lt requestScope.limitPage && requestScope.limitPage > 1}">
-                    <div class="next" onclick="nextPageButton('${requestScope.page}', '${requestScope.limitPage}', '${requestScope.keywordNameSearch}', '${requestScope.keywordCategory}', '${requestScope.action}', '${requestScope.option}')" style="min-width: 40px; height: 30px; display: block; line-height: 30px; text-align: center; cursor: pointer; box-shadow: 0px 0px 10px rgba(0,0,0,0); background-color: white; border: 1px solid #999999; color: #999999; transition: background-color 0.3s ease;" onmouseover="this.style.backgroundColor = '#CCCCCC'; this.style.color = '#5E7F9D';" onmouseout="this.style.backgroundColor = 'white'; this.style.color = '#999999';">></div>
+                <c:if test="${requestScope.pageControl.page lt requestScope.pageControl.totalPage && requestScope.pageControl.totalPage > 1}">
+                    <div class="next" onclick="nextPageButton('${requestScope.pageControl.page}', '${requestScope.pageControl.totalPage}', '${requestScope.pageControl.urlPattern}')" style="min-width: 40px; height: 30px; display: block; line-height: 30px; text-align: center; cursor: pointer; box-shadow: 0px 0px 10px rgba(0,0,0,0); background-color: white; border: 1px solid #999999; color: #999999; transition: background-color 0.3s ease;" onmouseover="this.style.backgroundColor = '#CCCCCC'; this.style.color = '#5E7F9D';" onmouseout="this.style.backgroundColor = 'white'; this.style.color = '#999999';">></div>
                 </c:if>
             </div>
         </div>
-    <script src="${pageContext.request.contextPath}/js/category.js"></script>
-</body>
+        <%@include file="common/footer.jsp" %>
+        <script src="${pageContext.request.contextPath}/js/category.js"></script>
+    </body>
 </html>

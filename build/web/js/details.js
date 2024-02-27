@@ -12,7 +12,33 @@ imgBtns.forEach((imgItem) => {
         slideImage();
     });
 });
+function getCookie(cookieName) {
+    var name = cookieName + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var cookieArray = decodedCookie.split(';');
+    for (var i = 0; i < cookieArray.length; i++) {
+        var cookie = cookieArray[i];
+        while (cookie.charAt(0) === ' ') {
+            cookie = cookie.substring(1);
+        }
+        if (cookie.indexOf(name) === 0) {
+            return cookie.substring(name.length, cookie.length);
+        }
+    }
+    return "";
+}
+
 var addToCart = (id) => {
+    var cookieName = "caseNumber" + id;
+    var cookieValue = getCookie(cookieName);
+// Kiểm tra xem giá trị cookie không phải là NaN
+    if (!isNaN(cookieValue)) {
+        //var expirationDate = new Date();
+        //expirationDate.setTime(expirationDate.getTime() + (1 * 60 * 60 * 1000)); // 1 giờ
+        // Cập nhật giá trị của cookie
+        // ";expires=" + expirationDate.toUTCString()
+        document.cookie = cookieName + "=" + (parseInt(cookieValue) + 1) + ";path=/";
+    }
     let quantity = document.querySelector('.quantity-input').value;
     function parseBookString(inputString) {
         let book = {};

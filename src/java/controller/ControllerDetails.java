@@ -108,14 +108,13 @@ public class ControllerDetails extends HttpServlet {
             Cookie cookie = new Cookie(user.getUser_name(), encodedJson);
             int newQuantity = book.getQuantity() - book_cart.getQuantity();
             Cookie quantityMax = new Cookie("maxQuantity" + book.getBook_id(), book.getQuantity() + "");
-            Cookie changeNumber = new Cookie("changeQuantityMaxBookCart", String.valueOf(newQuantity));           
+            Cookie changeNumber = new Cookie("changeQuantityMaxBookCart", String.valueOf(newQuantity));
             changeNumber.setPath("/");
             cookie.setPath("/");
             quantityMax.setPath("/");
             response.addCookie(changeNumber);
             response.addCookie(quantityMax);
             response.addCookie(cookie);
-            //request.setAttribute("changeNumber", book.getQuantity() - book_cart.getQuantity());
             request.setAttribute("numberBook", quantity);
             request.setAttribute("book", book);
             request.getRequestDispatcher("view/details.jsp").forward(request, response);

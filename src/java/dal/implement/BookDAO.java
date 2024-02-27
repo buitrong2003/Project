@@ -4,6 +4,7 @@
  */
 package dal.implement;
 
+import constant.CommonConst;
 import dal.GenericDAO;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,43 +35,14 @@ public class BookDAO extends GenericDAO<Book> {
     }
 
     public List<Book> getListNewBook() {
-        String sql = "SELECT TOP (20) b.book_id,b.name,b.author,b.publisher,b.price,"
-                + "b.description,b.genre,b.quantity,b.publication_date\n"
-                + ",b.image,b.book_hot,c.category_id,c.name as category_name\n"
-                + " FROM Book b join Category c on b.category_id = c.category_id\n"
-                + " WHERE [publication_date] >= DATEADD(DAY, - 50, GETDATE())\n"
-                + " ORDER BY [publication_date] DESC;";
+        String sql = "SELECT TOP 12 * FROM [dbo].[Book]\n"
+                + "order by publication_date desc";
         parameterMap = new LinkedHashMap<>();
         return queryGenericDAO(Book.class, sql, parameterMap);
     }
 
     public static void main(String[] args) {
-        for (Book book : new BookDAO().getListBookPagination(2, 10, new BookDAO().getListBookByAuthor("", "a"))) {
-            System.out.println(book);
-        }
-    }
 
-    public List<Book> getListBookByName(String category, String name) {
-        String sql = "select b.book_id,b.name,b.author,b.publisher,b.price,"
-                + "b.description,b.genre,b.quantity,b.publication_date\n"
-                + ",b.image,b.book_hot,c.category_id,c.name as category_name\n"
-                + "from Book b join Category c on b.category_id = c.category_id\n"
-                + "where c.name like ? and b.name like ?";
-        parameterMap = new LinkedHashMap<>();
-        parameterMap.put("category", "%" + category + "%");
-        parameterMap.put("name", "%" + name + "%");
-        return queryGenericDAO(Book.class, sql, parameterMap);
-    }
-
-    public List<Book> getListBookByAuthor(String category, String author) {
-        String sql = "select b.book_id,b.name,b.author,b.publisher,b.price,b.description,b.genre,b.quantity,b.publication_date\n"
-                + ",b.image,b.book_hot,c.category_id,c.name as category_name\n"
-                + "from Book b join Category c on b.category_id = c.category_id\n"
-                + "where c.name like ? and b.author like ?";
-        parameterMap = new LinkedHashMap<>();
-        parameterMap.put("category", "%" + category + "%");
-        parameterMap.put("name", "%" + author + "%");
-        return queryGenericDAO(Book.class, sql, parameterMap);
     }
 
     public List<Book> getListBookPagination(int page, int limit, List<Book> listBook) {
@@ -114,6 +86,78 @@ public class BookDAO extends GenericDAO<Book> {
     @Override
     public int insert(Book t) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    // sửa
+    public List<Book> findByCategory(String idCategory, int page) {
+        String sql = "select * from Book\n"
+                + "where category_id = ?\n"
+                + "order by book_id offset ? rows\n"
+                + "fetch next ? rows only";
+        parameterMap = new LinkedHashMap<>();
+        parameterMap.put("idCategory", idCategory);
+        parameterMap.put("offset", (page - 1) * CommonConst.RECORD_PER_PAGE);
+        parameterMap.put("fetch", CommonConst.RECORD_PER_PAGE);
+        return queryGenericDAO(Book.class, sql, parameterMap);
+    }
+
+    public List<Book> findByName(String keyword, int page) {
+        String sql = "select * from Book\n"
+                + "where [name] like ?\n"
+                + "order by book_id offset ? rows\n"
+                + "fetch next ? rows only";
+        parameterMap = new LinkedHashMap<>();
+        parameterMap.put("keyword", "%" + keyword + "%");
+        parameterMap.put("offset", (page - 1) * CommonConst.RECORD_PER_PAGE);
+        parameterMap.put("fetch", CommonConst.RECORD_PER_PAGE);
+        return queryGenericDAO(Book.class, sql, parameterMap);
+    }
+
+    public List<Book> findByAuthor(String keyword, int page) {
+        String sql = "select * from Book\n"
+                + "where [author] like ?\n"
+                + "order by book_id offset ? rows\n"
+                + "fetch next ? rows only";
+        parameterMap = new LinkedHashMap<>();
+        parameterMap.put("keyword", "%" + keyword + "%");
+        parameterMap.put("offset", (page - 1) * CommonConst.RECORD_PER_PAGE);
+        parameterMap.put("fetch", CommonConst.RECORD_PER_PAGE);
+        return queryGenericDAO(Book.class, sql, parameterMap);
+    }
+
+    public int findTotalRecordByCategory(String idCategory) {
+        String sql = "select count(*) from Book where category_id = ?";
+        parameterMap = new LinkedHashMap<>();
+        parameterMap.put("idCategory", idCategory);
+        return findTotalRecordGenericDAO(Book.class, sql, parameterMap);
+    }
+
+    public int findTotalRecordByName(String keyword) {
+        String sql = "select count(*) from Book where [name] like ?";
+        parameterMap = new LinkedHashMap<>();
+        parameterMap.put("idCategory", "%" + keyword + "%");
+        return findTotalRecordGenericDAO(Book.class, sql, parameterMap);
+    }
+
+    public int findTotalRecordByAuthor(String keyword) {
+        String sql = "select count(*) from Book where [name] like ?";
+        parameterMap = new LinkedHashMap<>();
+        parameterMap.put("idCategory", "%" + keyword + "%");
+        return findTotalRecordGenericDAO(Book.class, sql, parameterMap);
+    }
+
+    public List<Book> findByPage(int page) {
+        String sql = "select * from Book\n"
+                + "order by book_id offset ? rows\n"
+                + "fetch next ? rows only";
+        parameterMap = new LinkedHashMap<>();
+        parameterMap.put("offset", (page - 1) * CommonConst.RECORD_PER_PAGE);
+        parameterMap.put("fetch", CommonConst.RECORD_PER_PAGE);
+        return queryGenericDAO(Book.class, sql, parameterMap);
+    }
+
+    public int findTotalRecord() {
+        return findTotalRecordGenericDAO(Book.class);
     }
 
 }

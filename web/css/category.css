@@ -9,3 +9,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 .hover-scale:hover {
     transform: scale(1.05);
 }
+.book-category:hover {
+    text-decoration: underline;
+}
+.category-book:hover {
+    text-decoration: underline;
+    background-color: red;
+    color: blue;
+}

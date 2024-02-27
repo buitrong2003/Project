@@ -4,10 +4,10 @@
  */
 package controller;
 
+import constant.CommonConst;
 import dal.implement.BookDAO;
 import dal.implement.CategoryDAO;
 import java.io.IOException;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,82 +15,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import model.Book;
 import model.Category;
+import model.PageControl;
 
 /**
  *
  * @author d
  */
 public class ControllerCategory extends HttpServlet {
-
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        CategoryDAO daoCategory = new CategoryDAO();
-        BookDAO daoBook = new BookDAO();
-        List<Category> listCategory = daoCategory.findAll();
-        String raw_page = request.getParameter("page") == null ? "1" : request.getParameter("page");
-        String action = request.getParameter("action");
-        if (action == null) {
-            action = "category";
-        }
-        int page = Integer.parseInt(raw_page);
-        int limit = 10;
-        String key = request.getParameter("keyCategory");
-        if (key == null || key.equals("tat-ca")) {
-            key = "";
-        }
-        List<Book> listBook = null;
-        Integer sumBook = null;
-        switch (action) {
-            case "category" -> {
-                listBook = daoBook.listBookByCategory(key);
-                sumBook = listBook.size();
-            }
-            case "search" -> {
-                String option = request.getParameter("option");
-                String name = request.getParameter("name");
-                if (option.equalsIgnoreCase("Name")) {
-                    listBook = daoBook.getListBookByName(key, name);
-                    sumBook = listBook.size();
-                } else {
-                    listBook = daoBook.getListBookByAuthor(key, name);
-                    sumBook = listBook.size();
-                }
-                request.setAttribute("option", option);
-                request.setAttribute("keywordNameSearch", name);
-            }
-        }
-        if (key.isEmpty()) {
-            key = "tat-ca";
-        }
-        int limitPage = sumBook / limit;
-        if (sumBook % limit != 0) {
-            limitPage += 1;
-        }
-        if (limitPage > 1) {
-            listBook = daoBook.getListBookPagination(page, limit, listBook);
-        }
-        String sortName = request.getParameter("sortBy");
-        if (sortName != null) {
-            daoBook.sortBookByPrice(listBook, sortName);
-            request.setAttribute("sortBook", sortName);
-        }
-        request.setAttribute("keywordCategory", key);
-        request.setAttribute("action", action);
-        request.setAttribute("listBook", listBook);
-        request.setAttribute("page", page);
-        request.setAttribute("limitPage", limitPage);
-        request.setAttribute("listCategory", listCategory);
-        request.getRequestDispatcher("view/category.jsp").forward(request, response);
-    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -101,10 +32,19 @@ public class ControllerCategory extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    BookDAO daoBook = new BookDAO();
+    CategoryDAO daoCategory = new CategoryDAO();
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        PageControl pageControl = new PageControl();
+        List<Book> listBook = findProductDoGet(request, pageControl);
+        List<Category> listCategory = daoCategory.findAll();
+        request.setAttribute("pageControl", pageControl);
+        request.setAttribute("listCategory", listCategory);
+        request.setAttribute("listBook", listBook);
+        request.getRequestDispatcher("view/category.jsp").forward(request, response);
     }
 
     /**
@@ -118,7 +58,7 @@ public class ControllerCategory extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+
     }
 
     /**
@@ -130,5 +70,63 @@ public class ControllerCategory extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
+    private List<Book> findProductDoGet(HttpServletRequest request, PageControl pageControl) {
+        String pageRaw = request.getParameter("page");
+        int page;
+        try {
+            page = Integer.parseInt(pageRaw);
+            if (page <= 0) {
+                page = 1;
+            }
+        } catch (NumberFormatException e) {
+            page = 1;
+        }
+        String actionSearch = request.getParameter("search") == null
+                ? "default"
+                : request.getParameter("search");
+        List<Book> listBook = null;
+        int totalRecord = 0;
+        switch (actionSearch) {
+            case "category" -> {
+                String idCategory = request.getParameter("categoryid");
+                listBook = daoBook.findByCategory(idCategory, page);
+                totalRecord = daoBook.findTotalRecordByCategory(idCategory);
+                pageControl.setUrlPattern("?search=category&categoryid=" + idCategory + "&");
+
+            }
+            case "searchByName" -> {
+                String keyword = request.getParameter("keyword");
+                listBook = daoBook.findByName(keyword, page);
+                totalRecord = daoBook.findTotalRecordByName(keyword);
+                pageControl.setUrlPattern("?search=searchByName&keyword=" + keyword + "&");
+                request.setAttribute("keyword", keyword);
+                request.setAttribute("option", "Name");
+            }
+            case "searchByAuthor" -> {
+                String keyword = request.getParameter("keyword");
+                listBook = daoBook.findByAuthor(keyword, page);
+                totalRecord = daoBook.findTotalRecordByAuthor(keyword);
+                pageControl.setUrlPattern("?search=searchByAuthor&keyword=" + keyword + "&");
+                request.setAttribute("keyword", keyword);
+                request.setAttribute("option", "Author");
+            }
+            default -> {
+                listBook = daoBook.findByPage(page);
+                totalRecord = daoBook.findTotalRecord();
+                pageControl.setUrlPattern("?");
+            }
+        }
+        String sort = request.getParameter("sort") == null ? "keepStable"
+                : request.getParameter("sort");
+        daoBook.sortBookByPrice(listBook, sort);
+        request.setAttribute("sortBook", sort);
+        int totalPage = (totalRecord % CommonConst.RECORD_PER_PAGE) == 0
+                ? (totalRecord / CommonConst.RECORD_PER_PAGE)
+                : (totalRecord / CommonConst.RECORD_PER_PAGE) + 1;
+        pageControl.setTotalPage(totalPage);
+        pageControl.setPage(page);
+        return listBook;
+    }
 
 }

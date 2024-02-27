@@ -35,10 +35,10 @@
                                                 <c:set var="quantityBookCart" value="'quantity_' + ${bookCart.book_id}" />
                                                 <c:set var="quantityCookie" value="${cookie[quantityBookCart].value}" />
                                                 <c:set var="maxQuantityBookCart" value="maxQuantity${bookCart.book_id}" />
+                                                <c:set var="cookieQuantityCart" value="caseNumber${bookCart.book_id}"/>                  
                                             <input id="case-number${bookCart.book_id}" type="number" min="0" class="form-control text-center" 
-                                                   value="${empty quantityCookie ? bookCart.quantity : quantityCookie}" 
-                                                   max="${cookie[maxQuantityBookCart].value}" 
-                                                   onchange="updateCookie(${bookCart.book_id}, this.value)" />
+                                                   value="${cookie[cookieQuantityCart].value == null ? bookCart.quantity : cookie[cookieQuantityCart].value}" 
+                                                   max="${cookie[maxQuantityBookCart].value}" />
                                             <button onclick="plusQuantity(${bookCart.book_id});getPriceBook('${bookCart.price}',${bookCart.book_id})" id="case-plus" class="btn btn-default"><i class="fas fa-plus"></i></button>
                                         </div>
                                         <h5><span id="phone-total${bookCart.book_id}">
@@ -118,6 +118,7 @@
                     </div>
                 </div>
             </div>
+            <%@include file="common/footer.jsp" %>
             <script src="${pageContext.request.contextPath}/js/shoppingcart.js"></script>
         </section>
     </body>

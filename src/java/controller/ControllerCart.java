@@ -125,7 +125,6 @@ public class ControllerCart extends HttpServlet {
         String raw_page = request.getParameter("page") == null ? "1" : request.getParameter("page");
         int page = Integer.parseInt(raw_page);
         int limitPage = listCartBook.size() / limit + (listCartBook.size() % limit == 0 ? 0 : 1);
-
         if (limitPage > 1) {
             listCartBook = daoBook.getListBookPagination(page, limit, listCartBook);
         }

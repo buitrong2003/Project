@@ -2,21 +2,21 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/JavaScript.js to edit this template
  */
-var sortByBook = (nameSearch, keywordCategory, action, option, page) => {
+var sortByBook = (page, url) => {
     let parameter = document.querySelector('.form-sort');
-    window.location.href = `category?name=${nameSearch}&keyCategory=${keywordCategory}&action=${action}&option=${option}&page=${page}&sortBy=` + parameter.value;
+    window.location.href = `category${url}page=${page}&sort=${parameter.value}`;
 };
-function nextPageButton(page, totalPage, keywordNameSearch, keywordCategory, action, option) {
+function nextPageButton(page, totalPage, url) {
     const currentPage = parseInt(page);
     const limitPage = parseInt(totalPage);
     if (currentPage < totalPage) {
-        window.location.href = "category?page=" + (currentPage + 1) + `&name=${keywordNameSearch}&keyCategory=${keywordCategory}&action=${action}&option=${option}`;
+        window.location.href = `category${url}&page=${currentPage + 1}`;
     }
 }
-function prevPageButton(page, keywordNameSearch, keywordCategory, action, option) {
+function prevPageButton(page, url) {
     const currentPage = parseInt(page);
     if (currentPage > 1) {
-        window.location.href = "category?page=" + (currentPage - 1) + `&name=${keywordNameSearch}&keyCategory=${keywordCategory}&action=${action}&option=${option}`;
+        window.location.href = `category${url}&page=${currentPage - 1}`;
     }
 }
 var getCategory = (category) => {
@@ -31,18 +31,9 @@ var getCategory = (category) => {
 };
 var performSearch = () => {
     let keyword = document.getElementById('searchInput');
+    let option = document.getElementById('chooseOption');
     if (keyword.value.length !== 0) {
-        let menuCategory = document.querySelector('.menu-category');
-        let nameCategory = document.querySelector('.name');
-        let action = document.querySelector('.action-category');
-        let option = document.getElementById('chooseOption');
-        let optionSearch = document.querySelector('.optionSearch');
-        optionSearch.value = option.value;
-        action.value = "search";
-        nameCategory.name = 'name';
-        nameCategory.value = keyword.value;
-        menuCategory.action = "category";
-        menuCategory.submit();
+        window.location.href = `category?search=searchBy${option.value}&keyword=${keyword.value}`;
     }
 };
 
