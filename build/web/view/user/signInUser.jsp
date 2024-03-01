@@ -22,7 +22,7 @@
                     <div class="error">${requestScope.errorAcount}</div>
                     <input name="username" value="${requestScope.username}" type="text" placeholder="Name" required="" />
                     <div class="password-container">
-                        <input name="password" value="${requestScope.password}" type="password" required="" placeholder="Password" class="passwordInput" />
+                        <input name="password" value="${requestScope.passwordError}" type="password" required="" placeholder="Password" class="passwordInput" />
                         <span class="togglePassword" onclick="togglePassword(this)">👁️</span>
                     </div>
                     <a href="#">Forgot your password?</a>

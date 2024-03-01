@@ -6,7 +6,6 @@ package dal.implement;
 
 import constant.CommonConst;
 import dal.GenericDAO;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -43,21 +42,6 @@ public class BookDAO extends GenericDAO<Book> {
 
     public static void main(String[] args) {
 
-    }
-
-    public List<Book> getListBookPagination(int page, int limit, List<Book> listBook) {
-        int start = (page - 1) * limit + 1;
-        int end = page * limit;
-        List<Book> listBookPagination = new ArrayList<>();
-        for (int i = start - 1; i < end; i++) {
-            try {
-                if (listBook.get(i) != null) {
-                    listBookPagination.add(listBook.get(i));
-                }
-            } catch (Exception e) {
-            }
-        }
-        return listBookPagination;
     }
 
     public void sortBookByPrice(List<Book> listBook, String sortBook) {

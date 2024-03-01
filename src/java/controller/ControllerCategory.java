@@ -93,7 +93,6 @@ public class ControllerCategory extends HttpServlet {
                 listBook = daoBook.findByCategory(idCategory, page);
                 totalRecord = daoBook.findTotalRecordByCategory(idCategory);
                 pageControl.setUrlPattern("?search=category&categoryid=" + idCategory + "&");
-
             }
             case "searchByName" -> {
                 String keyword = request.getParameter("keyword");

@@ -90,16 +90,15 @@ function increaseValue(max) {
     var value = parseInt(inputElement.value);
     value = isNaN(value) ? 0 : value;
     inputElement.max = max;
-    if (value < max) {
+    if (value < parseInt(max)) {
         value++;
     }
     let error = document.querySelector('.error');
-    if (value === parseInt(max)) {
+    if (value >= parseInt(max)) {
         error.innerHTML = "Số lượng bạn chọn đã đạt mức tối đa của sản phẩm này";
     } else {
         error.innerHTML = "";
     }
-
     inputElement.value = value;
 }
 function decreaseValue() {

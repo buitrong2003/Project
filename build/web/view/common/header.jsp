@@ -12,93 +12,9 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-        <style>
-            #header {
-                width: 100%;
-                height: 13vh;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0);
-                position: fixed;
-                top: 0;
-                left: 0;
-                z-index: 1000;
-                background-color: white;
-            }
-            .category {
-                display: flex;
-                color: #267DFD;
-
-            }
-            #actions {
-                display: flex;
-            }
-
-            #actions .item {
-                margin-left:22px;
-            }
-            .account-info:hover .hidden-content {
-                visibility: visible;
-            }
-            .arrow-up {
-                position: absolute;
-                top: -10px;
-                left: 50%;
-                transform: translateX(-50%);
-                width: 0;
-                height: 0;
-                border-left: 10px solid transparent;
-                border-right: 10px solid transparent;
-                border-bottom: 10px solid white;
-            }
-            .hidden-content {
-                visibility: hidden;
-                position: absolute;
-                background-color: white;
-                box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-                padding: 10px;
-                z-index: 1;
-                transition: visibility 0.5s, opacity 0.5s;
-                margin-top: 3%;
-                margin-left: -4%;
-                display: block;
-                width: 12%;
-                text-align: center
-            }
-
-            .account-info:hover .hidden-content {
-                visibility: visible;
-            }
-
-            .arrow-up {
-                position: absolute;
-                top: -10px;
-                left: 50%;
-                transform: translateX(-50%);
-                width: 0;
-                height: 0;
-                border-left: 10px solid transparent;
-                border-right: 10px solid transparent;
-                border-bottom: 10px solid white;
-            }
-
-            .hidden-content div:hover {
-                background-color: #f0f0f0; /* Màu xám */
-                cursor: pointer;
-                color: #19C5AE
-            }
-            .truncate {
-                overflow: hidden;
-                display: -webkit-box;
-                -webkit-line-clamp: 2;
-                -webkit-box-orient: vertical;
-                text-overflow: ellipsis;
-            }
-        </style>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/header.css"/>
     </head>
     <body>
-
         <div id="header">
             <a style="text-decoration: none; color: #8B4513; font-weight: bold; display: flex; align-items: center; margin-left: 20px;width: 20%" href="home" class="logo">
                 <img style="width: 25%;" src="image/logo.jpg" alt="alt"/>
@@ -125,7 +41,6 @@
                    onmouseout="this.style.backgroundColor = ''; this.style.color = '#267DFD';">
                     Hot
                 </a>
-
             </div>
             <div style="width: 20%;" id="actions">
                 <div class="item">
@@ -154,36 +69,12 @@
                     </c:if>
                 </div>
                 <div class="item">
-                    <img onclick="getToCart()" style="cursor: pointer" src="image/cart.png" alt="">
+                    <form action="cart" class="get-to-cart">
+                        <img onclick="return this.closest('form').submit()" style="cursor: pointer" src="image/cart.png" alt="">
+                    </form>
                 </div>
             </div>
         </div>
-        <form action="cart" method="post" class="get-to-cart">
-
-        </form>
-        <script>
-            document.querySelectorAll('.hidden-content div').forEach(item => {
-                item.addEventListener('mouseover', function () {
-                    this.classList.add('hovered'); // Thêm lớp CSS khi hover vào
-                });
-
-                item.addEventListener('mouseout', function () {
-                    this.classList.remove('hovered'); // Xóa lớp CSS khi rời khỏi
-                });
-            });
-            var getLogout = () => {
-                window.location.href = "login";
-            };
-            var getSignUp = () => {
-                window.location.href = "register";
-            };
-            var getSignIn = () => {
-                window.location.href = "login";
-            };
-            var getToCart = () => {
-                let cart = document.querySelector('.get-to-cart');
-                cart.submit();
-            };
-        </script>
+        <script src="${pageContext.request.contextPath}/js/header.js"></script>
     </body>
 </html>

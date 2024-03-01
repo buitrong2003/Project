@@ -65,17 +65,11 @@
                                 </script>
                             </div>
                         </div>
-                    </div>
-                    <c:set var="changeQuantityMaxBookCartValue" value="" />
-                    <c:forEach var="cCookie" items="${pageContext.request.cookies}">
-                        <c:if test="${cCookie.name eq 'changeQuantityMaxBookCart'}">
-                            <c:set var="changeQuantityMaxBookCartValueJ" value="${cCookie.value}" />
-                        </c:if>
-                    </c:forEach>
+                    </div>                    
                     <div class="quantity-container">
-                        <input style="border: 1px solid #8A8B89" type="button" class="quantity-button" value="-" onclick="decreaseValue()">
-                        <input class="quantity-input" type="number" min="0" max="${changeQuantityMaxBookCartValueJ == null ? book.quantity - (requestScope.numberBook == null ? 0 : requestScope.numberBook) : changeQuantityMaxBookCartValueJ - (requestScope.numberBook == null ? 0 : requestScope.numberBook)}" value="${requestScope.numberBook == null ? 1 : requestScope.numberBook}" id="numberInput">
-                        <input style="border: 1px solid #8A8B89"  type="button" class="quantity-button" value="+" onclick="increaseValue('${requestScope.changeNumber == null ? book.quantity : requestScope.changeNumber}')">
+                        <input style="border: 1px solid #8A8B89" type="button" class="quantity-button" value="-" onclick="decreaseValue()"> 
+                        <input class="quantity-input" type="number" min="0" max="${requestScope.maxQuantityCart}" value="${requestScope.quantity == null ? (requestScope.maxQuantityCart == 0 ? 0 : 1) : requestScope.quantity}" id="numberInput">
+                        <input style="border: 1px solid #8A8B89"  type="button" class="quantity-button" value="+" onclick="increaseValue('${requestScope.maxQuantityCart}')">
                     </div>
                     <div style="color: red" class="error">${requestScope.error}</div>
                     <div class = "purchase-info">

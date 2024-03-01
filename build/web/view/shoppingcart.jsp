@@ -29,16 +29,13 @@
                                         <img style="cursor: pointer" src="image/${bookCart.image}" alt="">
                                         <h5 style="cursor: pointer">${bookCart.name}</h5>
                                     </div>
+                                    <c:set var="maxQuantity" value="maxQuantity${bookCart.book_id}" />
                                     <div class="col-md-6 center-item">
                                         <div class="input-group number-spinner">
-                                            <button onclick="minusQuantity(${bookCart.book_id});getPriceBook('${bookCart.price}',${bookCart.book_id})" id="case-minus" class="btn btn-default"><i class="fas fa-minus"></i></button>
-                                                <c:set var="quantityBookCart" value="'quantity_' + ${bookCart.book_id}" />
-                                                <c:set var="quantityCookie" value="${cookie[quantityBookCart].value}" />
-                                                <c:set var="maxQuantityBookCart" value="maxQuantity${bookCart.book_id}" />
-                                                <c:set var="cookieQuantityCart" value="caseNumber${bookCart.book_id}"/>                  
+                                            <button onclick="minusQuantity(${bookCart.book_id});getPriceBook('${bookCart.price}',${bookCart.book_id})" id="case-minus" class="btn btn-default"><i class="fas fa-minus"></i></button>                                                              
                                             <input id="case-number${bookCart.book_id}" type="number" min="0" class="form-control text-center" 
-                                                   value="${cookie[cookieQuantityCart].value == null ? bookCart.quantity : cookie[cookieQuantityCart].value}" 
-                                                   max="${cookie[maxQuantityBookCart].value}" />
+                                                   value="${bookCart.quantity}" 
+                                                   max="${cookie[maxQuantity].value}" />
                                             <button onclick="plusQuantity(${bookCart.book_id});getPriceBook('${bookCart.price}',${bookCart.book_id})" id="case-plus" class="btn btn-default"><i class="fas fa-plus"></i></button>
                                         </div>
                                         <h5><span id="phone-total${bookCart.book_id}">
@@ -88,32 +85,26 @@
                             <button type="button" class="btn btn-success check-out">Check Out</button>
                         </div>
                     </div>
-                    <div style="display: flex;justify-content: center;gap: 0.5%;margin-top: 2%">
-                        <c:if test="${requestScope.page > 1}">
-                            <div class="prev" onclick="prevPageButtonShoppingCart('${requestScope.page}')" style="min-width: 40px;height: 30px;display: block;line-height: 30px;text-align: center;cursor: pointer;color: #999999;box-shadow: 0px 0px 10px rgba(0,0,0,0);background-color: white;border: 1px solid #999999;transition: background-color 0.3s ease;" onmouseover="this.style.backgroundColor = '#CCCCCC'; this.style.color = '#5E7F9D';" onmouseout="this.style.backgroundColor = '#FFFFFF'; this.style.color = '#999999';"><</div>
+                    <div style="display: flex; justify-content: center; gap: 0.5%;">
+                        <c:if test="${requestScope.pageControl.page > 1}">
+                            <div class="prev" onclick="prevPageButton('${requestScope.pageControl.page}', '${requestScope.pageControl.urlPattern}')" style="min-width: 40px; height: 30px; display: block; line-height: 30px; text-align: center; cursor: pointer; color: #999999; box-shadow: 0px 0px 10px rgba(0,0,0,0); background-color: white; border: 1px solid #999999; transition: background-color 0.3s ease;" onmouseover="this.style.backgroundColor = '#CCCCCC'; this.style.color = '#5E7F9D';" onmouseout="this.style.backgroundColor = 'white'; this.style.color = '#999999';"><</div>
                         </c:if>
-                        <c:forEach var="index" begin="1" end="${requestScope.limitPage}">
-                            <c:if test="${requestScope.limitPage > 1}">
+                        <c:forEach var="index" begin="1" end="${requestScope.pageControl.totalPage}">
+                            <c:if test="${requestScope.pageControl.totalPage > 1}">
                                 <c:choose>
-                                    <c:when test="${index == requestScope.page}">
-                                        <form id="${index}" action="cart" method="post">
-                                            <input type="hidden" value="${index}" name="page"/>
-                                            <a onclick="getPage('${index}')" style="text-decoration: none;color: white;min-width: 40px;height: 30px;display: block;line-height: 30px;text-align: center;background-color: #00A5F0" href="#">${index}</a> 
-                                        </form>
+                                    <c:when test="${index == requestScope.pageControl.page}">
+                                        <a style="text-decoration: none;color: white;min-width: 40px;height: 30px;display: block;line-height: 30px;text-align: center;background-color: #00A5F0" href="category${requestScope.pageControl.urlPattern}page=${index}">${index}</a> 
                                     </c:when>
                                     <c:otherwise>
-                                        <form id="${index}" action="cart" method="post">
-                                            <input type="hidden" value="${index}" name="page"/>
-                                            <a onclick="getPage('${index}')" class="pageContent" href="#" style="text-decoration: none;color: #999999;min-width: 40px;height: 30px;display: block;line-height: 30px;text-align: center;box-shadow: 0px 0px 10px rgba(0,0,0,0);border: 1px solid #999999; background-color: #FFFFFF; transition: background-color 0.3s ease;" onmouseover="this.style.backgroundColor = '#CCCCCC'; this.style.color = '#5E7F9D';" onmouseout="this.style.backgroundColor = '#FFFFFF'; this.style.color = '#999999';">
-                                                ${index}
-                                            </a>
-                                        </form>
+                                        <a class="pageContent" href="category${requestScope.pageControl.urlPattern}page=${index}" style="text-decoration: none;color: #999999;min-width: 40px;height: 30px;display: block;line-height: 30px;text-align: center;box-shadow: 0px 0px 10px rgba(0,0,0,0);border: 1px solid #999999; background-color: #FFFFFF; transition: background-color 0.3s ease;" onmouseover="this.style.backgroundColor = '#CCCCCC'; this.style.color = '#5E7F9D';" onmouseout="this.style.backgroundColor = '#FFFFFF'; this.style.color = '#999999';">
+                                            ${index}
+                                        </a>
                                     </c:otherwise>
                                 </c:choose>
                             </c:if>
                         </c:forEach>
-                        <c:if test="${requestScope.page lt requestScope.limitPage && requestScope.limitPage > 1}">
-                            <div class="next" onclick="nextPageButtonShoppingCart('${requestScope.page}', '${requestScope.limitPage}')" style="min-width: 40px;height: 30px;display: block;line-height: 30px;text-align: center;cursor: pointer;box-shadow: 0px 0px 10px rgba(0,0,0,0);background-color: white;border: 1px solid #999999;color: #999999;background-color 0.3s ease;" onmouseover="this.style.backgroundColor = '#CCCCCC'; this.style.color = '#5E7F9D';" onmouseout="this.style.backgroundColor = '#FFFFFF'; this.style.color = '#999999';">></div>
+                        <c:if test="${requestScope.pageControl.page lt requestScope.pageControl.totalPage && requestScope.pageControl.totalPage > 1}">
+                            <div class="next" onclick="nextPageButton('${requestScope.pageControl.page}', '${requestScope.pageControl.totalPage}', '${requestScope.pageControl.urlPattern}')" style="min-width: 40px; height: 30px; display: block; line-height: 30px; text-align: center; cursor: pointer; box-shadow: 0px 0px 10px rgba(0,0,0,0); background-color: white; border: 1px solid #999999; color: #999999; transition: background-color 0.3s ease;" onmouseover="this.style.backgroundColor = '#CCCCCC'; this.style.color = '#5E7F9D';" onmouseout="this.style.backgroundColor = 'white'; this.style.color = '#999999';">></div>
                         </c:if>
                     </div>
                 </div>

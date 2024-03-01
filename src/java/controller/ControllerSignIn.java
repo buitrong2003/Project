@@ -64,9 +64,9 @@ public class ControllerSignIn extends HttpServlet {
             response.sendRedirect("home");
         } else {
             request.setAttribute("username", username);
-            request.setAttribute("password", password);
+            request.setAttribute("passwordError", password);
             request.setAttribute("errorAcount", "Login information is incorrect");
-            request.getRequestDispatcher("view/signInUser.jsp").forward(request, response);
+            request.getRequestDispatcher("view/user/signInUser.jsp").forward(request, response);
         }
     }
 

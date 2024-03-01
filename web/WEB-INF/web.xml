@@ -36,6 +36,10 @@
         <servlet-name>ControllerSignUp</servlet-name>
         <servlet-class>controller.ControllerSignUp</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ControllerDashboard</servlet-name>
+        <servlet-class>controller.admin.ControllerDashboard</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ControllerBook</servlet-name>
         <url-pattern>/home</url-pattern>
@@ -59,5 +63,9 @@
     <servlet-mapping>
         <servlet-name>ControllerSignUp</servlet-name>
         <url-pattern>/register</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ControllerDashboard</servlet-name>
+        <url-pattern>/admin/dashboard</url-pattern>
     </servlet-mapping>
 </web-app>

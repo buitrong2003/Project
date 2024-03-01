@@ -17,9 +17,6 @@ const container = document.getElementById('container');
 var getSubmit = () => {
     window.location.href = "register";
 };
-
-
-
 const passwordInput = document.getElementById('passwordInput');
 const confirmPasswordInput = document.getElementById('confirmPasswordInput');
 const passwordError = document.getElementById('passwordError');

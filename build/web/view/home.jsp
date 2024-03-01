@@ -19,9 +19,9 @@
             <%@include file="common/header.jsp" %>
             <div style="width: 100%;overflow: hidden;margin-top: -4%">
                 <div class="image-wapper" style="margin-top: 9%; display: flex;transition: 0.5s" >
-                    <img class="banner-image" style="width: 100%;cursor: pointer" src="https://images-production.bookshop.org/spree/promo_banner_slides/desktop_images/294/original/MARTYR_desktop.jpeg?1708444828" alt="Banner Image 1">
-                    <img class="banner-image" style="width: 100%;cursor: pointer" src="https://images-production.bookshop.org/spree/promo_banner_slides/desktop_images/293/original/LoveandHotChicken_Bookshop_HERO_2048x600.jpg?1708445129" alt="Banner Image 2">
-                    <img class="banner-image" style="width: 100%;cursor: pointer" src="https://images-production.bookshop.org/spree/promo_banner_slides/desktop_images/294/original/MARTYR_desktop.jpeg?1708444828" alt="Banner Image 3"/>
+                    <img class="banner-image" style="width: 100%;cursor: pointer" src="https://images-production.bookshop.org/spree/promo_banner_slides/desktop_images/293/original/582655846-theexchange_bookshop_2048x600.jpg?1709048548" alt="Banner Image 1">
+                    <img class="banner-image" style="width: 100%;cursor: pointer" src="https://images-production.bookshop.org/spree/promo_banner_slides/desktop_images/294/original/Tartt_The-Secret-History_Bookshop-desktop-2048x600-v01.jpg?1709048612" alt="Banner Image 2">
+                    <img class="banner-image" style="width: 100%;cursor: pointer" src="https://images-production.bookshop.org/spree/promo_banner_slides/desktop_images/293/original/582655846-theexchange_bookshop_2048x600.jpg?1709048548" alt="Banner Image 3"/>
                 </div>
             </div>
             <h2 style="text-align: center;margin: 2% 0%;border-bottom: 1px solid #E4E4E4;color: #2980B9">Sách hay xem nhiều</h2>

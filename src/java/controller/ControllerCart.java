@@ -14,7 +14,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,17 +39,13 @@ public class ControllerCart extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         User user = (User) session.getAttribute("acount");
-        BookDAO daoBook = new BookDAO();
         Cookie[] cookies = request.getCookies();
         response.setContentType("application/json; charset=UTF-8");
         String listCartJson = null;
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                if (cookie.getName().equalsIgnoreCase(user.getUser_name())) {
-                    Cookie deletedCookie = new Cookie("listCartBook", "");
+                if (cookie.getName().equals(user.getUser_name())) {
                     listCartJson = URLDecoder.decode(cookie.getValue(), "UTF-8");
-                    cookie.setMaxAge(0);
-                    response.addCookie(deletedCookie);
                 }
             }
         }
@@ -58,35 +53,10 @@ public class ControllerCart extends HttpServlet {
         if (listCartJson != null) {
             Gson gson = new Gson();
             Book[] booksArray = gson.fromJson(listCartJson, Book[].class);
-            for (Book book : booksArray) {
-                if (book.getBook_id() != Integer.parseInt(request.getParameter("id"))) {
-                    listCartBook.add(book);
-                }
-            }
-            ManageCart.listCartBook.put(user.getUser_name(), listCartBook);
-            listCartJson = gson.toJson(ManageCart.listCartBook.get(user.getUser_name()));
-            String encodedJson = URLEncoder.encode(listCartJson, "UTF-8");
-            // Tạo cookie mới với giá trị đã cập nhật
-            Cookie newCookie = new Cookie("listCartBook", encodedJson);
-            // Đặt thời gian sống của cookie (nếu cần)
-            //newCookie.setMaxAge(3600); // 1 hour in seconds
-            // Cập nhật giá trị của cookie bằng cách thêm cookie mới vào phản hồi
-            response.addCookie(newCookie);
-            int limit = 5;
-            String raw_page = request.getParameter("page") == null ? "1" : request.getParameter("page");
-            int page = Integer.parseInt(raw_page);
-            int totalPages = listCartBook.size() / limit + (listCartBook.size() % limit == 0 ? 0 : 1);
-            if (page > totalPages) {
-                page = page - 1; // Điều chỉnh số trang nếu trang hiện tại vượt quá tổng số trang sau khi xóa
-            }
-            if (totalPages > 1) {
-                listCartBook = daoBook.getListBookPagination(page, limit, listCartBook);
-            }
-            request.setAttribute("page", page);
-            request.setAttribute("limitPage", totalPages);
-            request.setAttribute("listBookCart", listCartBook);
-            request.getRequestDispatcher("view/shoppingcart.jsp").forward(request, response);
+            listCartBook.addAll(Arrays.asList(booksArray));
         }
+        request.setAttribute("listBookCart", listCartBook);
+        request.getRequestDispatcher("view/shoppingcart.jsp").forward(request, response);
     }
 
     /**
@@ -126,7 +96,7 @@ public class ControllerCart extends HttpServlet {
         int page = Integer.parseInt(raw_page);
         int limitPage = listCartBook.size() / limit + (listCartBook.size() % limit == 0 ? 0 : 1);
         if (limitPage > 1) {
-            listCartBook = daoBook.getListBookPagination(page, limit, listCartBook);
+            //listCartBook = daoBook.getListBookPagination(page, limit, listCartBook);
         }
         request.setAttribute("page", page);
         request.setAttribute("limitPage", limitPage);

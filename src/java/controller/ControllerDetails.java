@@ -15,8 +15,9 @@ import jakarta.servlet.http.HttpSession;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import model.Book;
+import model.Cart;
+import model.Item;
 import model.User;
 
 /**
@@ -42,6 +43,30 @@ public class ControllerDetails extends HttpServlet {
             response.setContentType("application/json; charset=UTF-8");
             Gson gson = new Gson();
             Book book = gson.fromJson(bookJSON, Book.class);
+            HttpSession session = request.getSession(false);
+            User user = (User) session.getAttribute("acount");
+            String listCartJson = null;
+            if (user != null) {
+                Cookie[] cookies = request.getCookies();
+                if (cookies != null) {
+                    for (Cookie cookie : cookies) {
+                        if (cookie.getName().equalsIgnoreCase(user.getUser_name())) {
+                            listCartJson = URLDecoder.decode(cookie.getValue(), "UTF-8");
+                        }
+                    }
+                }
+            }
+            int remainingQuantity = book.getQuantity();
+            Item[] itemArray = gson.fromJson(listCartJson, Item[].class);
+            if (itemArray != null) {
+                for (Item item : itemArray) {
+                    if (item.getBook().getBook_id() == book.getBook_id()) {
+                        remainingQuantity = book.getQuantity() - item.getQuantity();
+                        break;
+                    }
+                }
+            }
+            request.setAttribute("maxQuantityCart", remainingQuantity);
             request.setAttribute("book", book);
             request.getRequestDispatcher("view/details.jsp").forward(request, response);
         }
@@ -58,65 +83,40 @@ public class ControllerDetails extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        Gson gson = new Gson();
         HttpSession session = request.getSession(false);
         User user = (User) session.getAttribute("acount");
-        if (!ManageCart.listCartBook.containsKey(user.getUser_name())) {
-            ManageCart.listCartBook.put(user.getUser_name(), new ArrayList<>());
+        Cookie[] cookies = request.getCookies();
+        Item[] itemArray = null;
+        String listCartJson = null;
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equalsIgnoreCase(user.getUser_name())) {
+                    listCartJson = URLDecoder.decode(cookie.getValue(), "UTF-8");
+                }
+            }
         }
+        itemArray = gson.fromJson(listCartJson, Item[].class);
         String bookJSON = request.getParameter("book");
         int quantity = Integer.parseInt(request.getParameter("quantityBook"));
         if (bookJSON != null) {
             bookJSON = URLDecoder.decode(bookJSON, StandardCharsets.UTF_8.name());
             response.setContentType("application/json; charset=UTF-8");
-            Gson gson = new Gson();
             Book book = gson.fromJson(bookJSON, Book.class);
-            boolean bookFound = false;
-            Book book_cart = new Book(book.getBook_id(),
-                    book.getName(), book.getAuthor(), book.getPublisher(),
-                    book.getPrice(), book.getDescription(),
-                    book.getGenre(), quantity, book.getPublication_date(),
-                    book.getImage(), book.getCategory_id(), book.getBook_hot());
-            if (ManageCart.listCartBook.get(user.getUser_name()).size() >= 1) {
-                for (Book bookCart : ManageCart.listCartBook.get(user.getUser_name())) {
-                    if (bookCart.getBook_id() == book_cart.getBook_id()) {
-                        int quantityCart = bookCart.getQuantity() + book_cart.getQuantity();
-                        if (quantityCart <= book.getQuantity()) {
-                            bookCart.setQuantity(quantityCart);
-                            book_cart.setQuantity(quantityCart);
-                        } else {
-                            book_cart.setQuantity(bookCart.getQuantity());
-                            request.setAttribute("error", "Số lượng bạn chọn đã đạt mức tối đa của sản phẩm này");
-                        }
-                        bookFound = true;
-                        break;
-                    } else {
-                        bookFound = false;
-                    }
-                }
-                if (!bookFound) {
-                    ManageCart.listCartBook.get(user.getUser_name()).add(book_cart);
-                }
+            Item item = new Item(book, quantity, book.getPrice());
+            Cart cart = new Cart(user.getUser_name(), itemArray, item);
+            item = cart.getItemById(user.getUser_name(), book.getBook_id());
+            String jsonCart = new Gson().toJson(cart.getListCart().get(user.getUser_name()));
+            String encodedJson = URLEncoder.encode(jsonCart, "UTF-8");
+            if(quantity > book.getQuantity() - item.getQuantity()) {
+                quantity = book.getQuantity() - item.getQuantity();
             }
-            if (ManageCart.listCartBook.get(user.getUser_name()).isEmpty()) {
-                ManageCart.listCartBook.get(user.getUser_name()).add(book_cart);
-            }
-            if (quantity > book.getQuantity() - book_cart.getQuantity()) {
-                quantity = book.getQuantity() - book_cart.getQuantity();
-            }
-            String listCartJson = new Gson().toJson(ManageCart.listCartBook.get(user.getUser_name()));
-            String encodedJson = URLEncoder.encode(listCartJson, "UTF-8");
-            Cookie cookie = new Cookie(user.getUser_name(), encodedJson);
-            int newQuantity = book.getQuantity() - book_cart.getQuantity();
-            Cookie quantityMax = new Cookie("maxQuantity" + book.getBook_id(), book.getQuantity() + "");
-            Cookie changeNumber = new Cookie("changeQuantityMaxBookCart", String.valueOf(newQuantity));
-            changeNumber.setPath("/");
-            cookie.setPath("/");
-            quantityMax.setPath("/");
-            response.addCookie(changeNumber);
-            response.addCookie(quantityMax);
-            response.addCookie(cookie);
-            request.setAttribute("numberBook", quantity);
-            request.setAttribute("book", book);
+            Cookie cookieItem = new Cookie(user.getUser_name(), encodedJson);
+            cookieItem.setPath("/");
+            response.addCookie(cookieItem);
+            request.setAttribute("book", item.getBook());
+            request.setAttribute("quantity", quantity);
+            request.setAttribute("maxQuantityCart", book.getQuantity() - item.getQuantity());
             request.getRequestDispatcher("view/details.jsp").forward(request, response);
         }
     }

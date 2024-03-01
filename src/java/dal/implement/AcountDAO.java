@@ -42,7 +42,11 @@ public class AcountDAO extends GenericDAO<User> {
         parameterMap = new LinkedHashMap<>();
         parameterMap.put("username", username);
         parameterMap.put("password", password);
-        return queryGenericDAO(User.class, sql, parameterMap).get(0);
+        List<User> listUser = queryGenericDAO(User.class, sql, parameterMap);
+        if(listUser.isEmpty()) {
+            return null;
+        }
+        return listUser.get(0);
     }
 
     public void addUserRole(String username, int role) {

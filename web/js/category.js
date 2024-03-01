@@ -19,16 +19,7 @@ function prevPageButton(page, url) {
         window.location.href = `category${url}&page=${currentPage - 1}`;
     }
 }
-var getCategory = (category) => {
-    let menuCategory = document.querySelector('.menu-category');
-    let nameCategory = document.querySelector('.name');
-    let action = document.querySelector('.action-category');
-    action.value = "category";
-    nameCategory.name = 'keyCategory';
-    nameCategory.value = category;
-    menuCategory.action = "category";
-    menuCategory.submit();
-};
+
 var performSearch = () => {
     let keyword = document.getElementById('searchInput');
     let option = document.getElementById('chooseOption');
