@@ -2,41 +2,24 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller;
+package controller.user;
 
-import dal.implement.BookDAO;
+import dal.implement.AcountDAO;
+import dal.implement.UserRoleDAO;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.List;
-import model.Book;
+import jakarta.servlet.http.HttpSession;
+import model.User;
+import model.UserRole;
 
 /**
  *
  * @author d
  */
-public class ControllerBook extends HttpServlet {
-
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        BookDAO daoBook = new BookDAO();
-        List<Book> listBookHot = daoBook.getListBookHot();
-        List<Book> listNewBook = daoBook.getListNewBook();
-        request.setAttribute("listBookHot", listBookHot);
-        request.setAttribute("listNewBook", listNewBook);
-        request.getRequestDispatcher("view/home.jsp").forward(request, response);
-    }
+public class ControllerSignIn extends HttpServlet {
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -50,7 +33,11 @@ public class ControllerBook extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+        request.getRequestDispatcher("view/user/signInUser.jsp").forward(request, response);
     }
 
     /**
@@ -64,7 +51,23 @@ public class ControllerBook extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        AcountDAO daoAcount = new AcountDAO();
+        User user = daoAcount.getUser(username, password);
+        if (user != null) {
+            UserRoleDAO daoUserRole = new UserRoleDAO();
+            UserRole roleUser = daoUserRole.getRoleUser(username);
+            HttpSession acountSession = request.getSession(false);
+            acountSession.setAttribute("acount", user);
+            acountSession.setAttribute("roleUser", roleUser);
+            response.sendRedirect("home");
+        } else {
+            request.setAttribute("username", username);
+            request.setAttribute("passwordError", password);
+            request.setAttribute("errorAcount", "Login information is incorrect");
+            request.getRequestDispatcher("view/user/signInUser.jsp").forward(request, response);
+        }
     }
 
     /**

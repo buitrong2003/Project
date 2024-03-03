@@ -14,6 +14,9 @@ public class Item {
     private int quantity;
     private double price;
 
+    public Item() {
+    }
+
     public Item(Book book, int quantity, double price) {
         this.book = book;
         this.quantity = quantity;

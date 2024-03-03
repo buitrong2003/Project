@@ -7,6 +7,7 @@ package dal.implement;
 import constant.CommonConst;
 import dal.GenericDAO;
 import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import model.Book;
@@ -23,25 +24,23 @@ public class BookDAO extends GenericDAO<Book> {
     }
 
     public List<Book> getListBookHot() {
-        String sql = "select b.book_id,b.name,b.author,b.publisher,b.price,"
-                + "b.description,b.genre,b.quantity,b.publication_date\n"
-                + ",b.image,b.book_hot,c.category_id,c.name as category_name\n"
-                + "from Book b join Category c on b.category_id = c.category_id\n"
-                + "where b.book_hot >= ?";
+        String sql = "select top 10 * from Book \n"
+                + "order by book_hot desc";
         parameterMap = new LinkedHashMap<>();
-        parameterMap.put("quantitySeller", 300);
         return queryGenericDAO(Book.class, sql, parameterMap);
     }
 
     public List<Book> getListNewBook() {
-        String sql = "SELECT TOP 12 * FROM [dbo].[Book]\n"
+        String sql = "SELECT TOP 12 * FROM [Book]\n"
                 + "order by publication_date desc";
         parameterMap = new LinkedHashMap<>();
         return queryGenericDAO(Book.class, sql, parameterMap);
     }
 
     public static void main(String[] args) {
-
+        for (Book book : new BookDAO().findAll()) {
+            System.out.println(book);
+        }
     }
 
     public void sortBookByPrice(List<Book> listBook, String sortBook) {
@@ -68,8 +67,50 @@ public class BookDAO extends GenericDAO<Book> {
     }
 
     @Override
-    public int insert(Book t) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public int insert(Book book) {
+        String sql = "INSERT INTO [dbo].[Book]\n"
+                + "           ([name]\n"
+                + "           ,[author]\n"
+                + "           ,[publisher]\n"
+                + "           ,[price]\n"
+                + "           ,[description]\n"
+                + "           ,[genre]\n"
+                + "           ,[quantity]\n"
+                + "           ,[publication_date]\n"
+                + "           ,[image]\n"
+                + "           ,[category_id]\n"
+                + "           ,[book_hot]\n"
+                + "           ,[status]\n"
+                + "           ,[delete_date])\n"
+                + "     VALUES\n"
+                + "           (?\n"
+                + "           ,?\n"
+                + "           ,?\n"
+                + "           ,?\n"
+                + "           ,?\n"
+                + "           ,?\n"
+                + "           ,?\n"
+                + "           ,?\n"
+                + "           ,?\n"
+                + "           ,?\n"
+                + "           ,?\n"
+                + "           ,?\n"
+                + "           ,?) ";
+        parameterMap = new LinkedHashMap<>();
+        parameterMap.put("name", book.getName());
+        parameterMap.put("author", book.getAuthor());
+        parameterMap.put("pulisher", book.getPublisher());
+        parameterMap.put("price", book.getPrice());
+        parameterMap.put("description", book.getDescription());
+        parameterMap.put("genre", book.getGenre());
+        parameterMap.put("quantity", book.getQuantity());
+        parameterMap.put("publication_date", book.getPublication_date());
+        parameterMap.put("image", book.getImage());
+        parameterMap.put("category_id", book.getCategory_id());
+        parameterMap.put("book_hot", book.getBook_hot());
+        parameterMap.put("status", book.getStatus());
+        parameterMap.put("deleteDate", new java.sql.Date(new Date().getTime()));
+        return insertGenericDAO(sql, parameterMap);
     }
 
     // sửa

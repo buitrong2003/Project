@@ -29,16 +29,6 @@ function getCookie(cookieName) {
 }
 
 var addToCart = (id) => {
-    var cookieName = "caseNumber" + id;
-    var cookieValue = getCookie(cookieName);
-// Kiểm tra xem giá trị cookie không phải là NaN
-    if (!isNaN(cookieValue)) {
-        //var expirationDate = new Date();
-        //expirationDate.setTime(expirationDate.getTime() + (1 * 60 * 60 * 1000)); // 1 giờ
-        // Cập nhật giá trị của cookie
-        // ";expires=" + expirationDate.toUTCString()
-        document.cookie = cookieName + "=" + (parseInt(cookieValue) + 1) + ";path=/";
-    }
     let quantity = document.querySelector('.quantity-input').value;
     function parseBookString(inputString) {
         let book = {};
@@ -49,23 +39,11 @@ var addToCart = (id) => {
                 book[key] = parseInt(value);
             } else if (key === 'price') {
                 book[key] = parseFloat(value);
-            } else if (key === 'publication_date') {
-                if (value === '--') {
-                    book[key] = null;
-                } else {
-                    const months = {'Jan': '01', 'Feb': '02', 'Mar': '03', 'Apr': '04', 'May': '05', 'Jun': '06', 'Jul': '07', 'Aug': '08', 'Sep': '09', 'Oct': '10', 'Nov': '11', 'Dec': '12'};
-                    const parts = value.split(' ');
-                    const year = parts[5];
-                    const month = months[parts[1]];
-                    const day = parts[2];
-
-                    const formattedDateString = year + "-" + month + "-" + day;
-                    book[key] = formattedDateString;
-                }
             } else {
                 book[key] = value;
             }
         });
+        book['status'] = book['status'].replace(/\)$/g, '');
         return book;
     }
     let inputString = document.getElementById(id).value;

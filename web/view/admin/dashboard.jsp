@@ -76,29 +76,46 @@
                                             <th>Category</th>
                                             <th>Price</th>
                                             <th>Quantity</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
-
                                     <tbody>
                                         <c:forEach items="${requestScope.listBook}" var="book">
                                             <tr>
-                                                <td>${book.book_id}</td>
-                                                <td>${book.name}</td>
-                                                <td>
+                                                <td name="id">${book.book_id}</td>
+                                                <td name="name">${book.name}</td>
+                                                <td name="image">
                                                     <img style="width: 30%" src="../image/${book.image}" alt="alt"/>
                                                 </td>
-                                                <td>${book.author}</td>
-                                                <td>${book.publisher}</td>
-                                                <td>${book.description}</td>
-                                                <td>${book.genre}</td>
-                                                <td>${book.publication_date}</td>
-                                                <c:forEach items="${requestScope.listCategory}" var="category">
-                                                    <c:if test="${category.category_id == book.category_id}">
-                                                        <td>${category.name}</td>
-                                                    </c:if>
-                                                </c:forEach>
-                                                <td>${book.price}</td>
-                                                <td>${book.quantity}</td>
+                                                <td name="author">${book.author}</td>
+                                                <td name="publisher">${book.publisher}</td>
+                                                <td name="description">${book.description}</td>
+                                                <td name="genre">${book.genre}</td>
+                                                <td name="date">${book.publication_date}</td>
+                                                <td name="category">
+                                                    <c:forEach items="${requestScope.listCategory}" var="category">
+                                                        <c:if test="${category.category_id == book.category_id}">
+                                                            ${category.name}
+                                                        </c:if>
+                                                    </c:forEach>
+                                                </td>
+                                                <td name="price">${book.price}</td>
+                                                <td name="quantity">${book.quantity}</td>
+                                                <td>
+                                                    <div style="display: flex;gap: 10%;justify-content: center;align-items: center">
+                                                        <button type="button" class="btn btn-primary"
+                                                                data-toggle="modal" 
+                                                                data-target="#editProductModal"
+                                                                onclick="editProductModal(this)">
+                                                            Edit
+                                                        </button>
+                                                        <button type="button" class="btn btn-danger" 
+                                                                data-toggle="modal" data-target="#delete-product-modal"
+                                                                onclick="deleteProductModal('${book.book_id}')">
+                                                            Delete
+                                                        </button>
+                                                    </div>
+                                                </td>
                                             </tr>
                                         </c:forEach>
                                     </tbody>
@@ -107,7 +124,6 @@
                         </div>
                         <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
                     </div>
-
                 </div>
                 <!-- /.container-fluid -->
                 <!-- Sticky Footer -->
@@ -116,7 +132,6 @@
             <!-- /.content-wrapper -->
         </div>
         <!-- /#wrapper -->
-
         <!-- Scroll to Top Button-->
         <a class="scroll-to-top rounded" href="#page-top">
             <i class="fas fa-angle-up"></i>
@@ -124,6 +139,8 @@
         <!-- Logout Modal-->
         <%@include file="../common/admin/logoutModal.jsp" %>
         <jsp:include page="addProductModal.jsp"></jsp:include>
+        <jsp:include page="deleteProductModal.jsp"></jsp:include>
+        <jsp:include page="editProductModal.jsp"></jsp:include>
         <!-- Bootstrap core JavaScript-->
         <script src="../js/admin/jquery.min.js"></script>
         <script src="../js/admin/bootstrap.bundle.min.js"></script>

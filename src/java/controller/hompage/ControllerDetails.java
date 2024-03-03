@@ -2,9 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller;
+package controller.hompage;
 
+import controller.hompage.BookDeserializer;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -41,7 +43,9 @@ public class ControllerDetails extends HttpServlet {
         if (bookJSON != null) {
             bookJSON = URLDecoder.decode(bookJSON, StandardCharsets.UTF_8.name());
             response.setContentType("application/json; charset=UTF-8");
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder()
+                    .registerTypeAdapter(Book.class, new BookDeserializer())
+                    .create();
             Book book = gson.fromJson(bookJSON, Book.class);
             HttpSession session = request.getSession(false);
             User user = (User) session.getAttribute("acount");
@@ -56,8 +60,12 @@ public class ControllerDetails extends HttpServlet {
                     }
                 }
             }
+
             int remainingQuantity = book.getQuantity();
-            Item[] itemArray = gson.fromJson(listCartJson, Item[].class);
+            Gson gsonItem = new GsonBuilder()
+                    .registerTypeAdapter(Item[].class, new ItemDeserialize())
+                    .create();
+            Item[] itemArray = gsonItem.fromJson(listCartJson, Item[].class);
             if (itemArray != null) {
                 for (Item item : itemArray) {
                     if (item.getBook().getBook_id() == book.getBook_id()) {
@@ -83,7 +91,9 @@ public class ControllerDetails extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Book.class, new BookDeserializer())
+                .create();
         HttpSession session = request.getSession(false);
         User user = (User) session.getAttribute("acount");
         Cookie[] cookies = request.getCookies();
@@ -96,7 +106,10 @@ public class ControllerDetails extends HttpServlet {
                 }
             }
         }
-        itemArray = gson.fromJson(listCartJson, Item[].class);
+        Gson gsonItem = new GsonBuilder()
+                .registerTypeAdapter(Item[].class, new ItemDeserialize())
+                .create();
+        itemArray = gsonItem.fromJson(listCartJson, Item[].class);
         String bookJSON = request.getParameter("book");
         int quantity = Integer.parseInt(request.getParameter("quantityBook"));
         if (bookJSON != null) {
@@ -108,7 +121,7 @@ public class ControllerDetails extends HttpServlet {
             item = cart.getItemById(user.getUser_name(), book.getBook_id());
             String jsonCart = new Gson().toJson(cart.getListCart().get(user.getUser_name()));
             String encodedJson = URLEncoder.encode(jsonCart, "UTF-8");
-            if(quantity > book.getQuantity() - item.getQuantity()) {
+            if (quantity > book.getQuantity() - item.getQuantity()) {
                 quantity = book.getQuantity() - item.getQuantity();
             }
             Cookie cookieItem = new Cookie(user.getUser_name(), encodedJson);

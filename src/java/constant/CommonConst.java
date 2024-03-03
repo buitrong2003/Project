@@ -13,4 +13,5 @@ public class CommonConst {
     public static final int RECORD_PER_PAGE = 10;
     public static final String REQUEST_BOOK = "listBook";
     public static final String REQUEST_CATEGORY = "listCategory";
+    public static final int BOOK_STATUS = 1;
 }

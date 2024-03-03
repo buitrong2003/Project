@@ -38,21 +38,16 @@ function getDetails(id) {
                 book[key] = parseInt(value);
             } else if (key === 'price') {
                 book[key] = parseFloat(value);
-            } else if (key === 'publication_date') {
-                let date = new Date(value);
-                let formattedDateString = date.toISOString().slice(0, 10);
-                book[key] = formattedDateString;
             } else {
                 book[key] = value;
             }
         });
+        book['status'] = book['status'].replace(/\)$/g, '');
         return book;
     }
     let inputString = document.getElementById(id).value;
     let book = parseBookString(inputString);
     let bookJSON = JSON.stringify(book);
-    let encodedBookJSON = encodeURIComponent(bookJSON);
-    let url = "details?book=" + encodedBookJSON;
+    let url = "details?book=" + encodeURIComponent(bookJSON);
     window.location.href = url;
 }
-

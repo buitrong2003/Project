@@ -14,31 +14,35 @@
     </filter-mapping>
     <servlet>
         <servlet-name>ControllerBook</servlet-name>
-        <servlet-class>controller.ControllerBook</servlet-class>
+        <servlet-class>controller.hompage.ControllerBook</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ControllerCategory</servlet-name>
-        <servlet-class>controller.ControllerCategory</servlet-class>
+        <servlet-class>controller.hompage.ControllerCategory</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ControllerDetails</servlet-name>
-        <servlet-class>controller.ControllerDetails</servlet-class>
+        <servlet-class>controller.hompage.ControllerDetails</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ControllerCart</servlet-name>
-        <servlet-class>controller.ControllerCart</servlet-class>
+        <servlet-class>controller.hompage.ControllerCart</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ControllerSignIn</servlet-name>
-        <servlet-class>controller.ControllerSignIn</servlet-class>
+        <servlet-class>controller.user.ControllerSignIn</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ControllerSignUp</servlet-name>
-        <servlet-class>controller.ControllerSignUp</servlet-class>
+        <servlet-class>controller.user.ControllerSignUp</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ControllerDashboard</servlet-name>
         <servlet-class>controller.admin.ControllerDashboard</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ProductAdminServlet</servlet-name>
+        <servlet-class>controller.admin.ProductAdminServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>ControllerBook</servlet-name>
@@ -67,5 +71,9 @@
     <servlet-mapping>
         <servlet-name>ControllerDashboard</servlet-name>
         <url-pattern>/admin/dashboard</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProductAdminServlet</servlet-name>
+        <url-pattern>/admin/product</url-pattern>
     </servlet-mapping>
 </web-app>

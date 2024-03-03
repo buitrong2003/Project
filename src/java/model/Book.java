@@ -4,7 +4,6 @@
  */
 package model;
 
-
 import java.sql.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,4 +38,5 @@ public class Book {
     private String image;
     private int category_id;
     private int book_hot;
+    private int status;
 }
