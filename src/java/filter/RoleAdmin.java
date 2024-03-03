@@ -14,6 +14,10 @@ import jakarta.servlet.FilterConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import model.UserRole;
 
 /**
  *
@@ -102,7 +106,15 @@ public class RoleAdmin implements Filter {
         }
 
         doBeforeProcessing(request, response);
-
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        HttpServletResponse httpResponse = (HttpServletResponse) response;
+        HttpSession session = httpRequest.getSession(false);
+        if (session != null) {
+            UserRole acountRole = (UserRole) session.getAttribute("admin");
+            if (acountRole != null && acountRole.getId_role() == 2) {
+                
+            }
+        }
         Throwable problem = null;
         try {
             chain.doFilter(request, response);

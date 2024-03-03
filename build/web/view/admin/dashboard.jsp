@@ -23,6 +23,9 @@
         <!-- Custom styles for this template-->
         <link href="../css/sb-admin.css" rel="stylesheet">
         <link rel="stylesheet" href="../css/colReorder-bootstrap4.css"/>
+        <script src="https://cdn.ckeditor.com/4.16.1/standard/ckeditor.js"></script>
+<!-- CKFinder -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ckeditor/4.16.1/plugins/ckfinder/ckfinder.js"></script>
         <style>
             .error{
                 color:red;

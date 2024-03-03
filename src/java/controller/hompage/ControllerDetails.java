@@ -4,7 +4,6 @@
  */
 package controller.hompage;
 
-import controller.hompage.BookDeserializer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.IOException;
@@ -60,7 +59,6 @@ public class ControllerDetails extends HttpServlet {
                     }
                 }
             }
-
             int remainingQuantity = book.getQuantity();
             Gson gsonItem = new GsonBuilder()
                     .registerTypeAdapter(Item[].class, new ItemDeserialize())

@@ -23,24 +23,24 @@
                 <div style="margin-top: 7%" class="cart row">
                     <div class="col-md-9">
                         <div class="cart-item">
-                            <c:forEach items="${requestScope.listBookCart}" var="bookCart">
+                            <c:forEach items="${requestScope.listItem}" var="item">
                                 <div style="margin-top: 5%;margin-bottom: 5%" class="row">
                                     <div class="col-md-6 center-item mx-auto">
-                                        <img style="cursor: pointer" src="image/${bookCart.image}" alt="">
-                                        <h5 style="cursor: pointer">${bookCart.name}</h5>
+                                        <img style="cursor: pointer" src="image/${item.book.image}" alt="">
+                                        <h5 style="cursor: pointer">${item.book.name}</h5>
                                     </div>
                                     <c:set var="maxQuantity" value="maxQuantity${bookCart.book_id}" />
                                     <div class="col-md-6 center-item">
                                         <div class="input-group number-spinner">
-                                            <button onclick="minusQuantity(${bookCart.book_id});getPriceBook('${bookCart.price}',${bookCart.book_id})" id="case-minus" class="btn btn-default"><i class="fas fa-minus"></i></button>                                                              
-                                            <input id="case-number${bookCart.book_id}" type="number" min="0" class="form-control text-center" 
-                                                   value="${bookCart.quantity}" 
-                                                   max="${cookie[maxQuantity].value}" />
-                                            <button onclick="plusQuantity(${bookCart.book_id});getPriceBook('${bookCart.price}',${bookCart.book_id})" id="case-plus" class="btn btn-default"><i class="fas fa-plus"></i></button>
+                                            <button onclick="minusQuantity(${item.book.book_id})" id="case-minus" class="btn btn-default"><i class="fas fa-minus"></i></button>                                                              
+                                            <input id="case-number${item.book.book_id}" type="number" min="0" class="form-control text-center" 
+                                                   value="${item.quantity}" 
+                                                   max="${item.book.quantity}" />
+                                            <button onclick="plusQuantity(${item.book.book_id})" id="case-plus" class="btn btn-default"><i class="fas fa-plus"></i></button>
                                         </div>
-                                        <h5><span id="phone-total${bookCart.book_id}">
+                                        <h5><span id="phone-total${item.book.book_id}">
                                                 <script>
-                                                    var newPrice = ${bookCart.price * bookCart.quantity};
+                                                    var newPrice = ${item.price * item.quantity};
                                                     var formattedPrice = newPrice.toLocaleString('en-US', {minimumFractionDigits: 0});
                                                     formattedPrice = formattedPrice.replace(/,/g, '.');
                                                     document.write('₫' + formattedPrice);
@@ -77,7 +77,7 @@
                                 <div class="col-md-7">
                                     <h5>$<span id="sub-total">1,278</span></h5>
                                     <h5>$<span id="tax-amount">0</span></h5>
-                                    <h5>$<span id="total-price">1,278</span></h5>
+                                    <h5>$<span id="total-price">${requestScope.totalMoney == null ? 0 : requestScope.totalMoney}</span></h5>
                                 </div>
                             </div>
                         </div>

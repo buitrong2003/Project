@@ -33,7 +33,7 @@ public class ControllerDashboard extends HttpServlet {
      */
     BookDAO daoBook = new BookDAO();
     CategoryDAO daoCategory = new CategoryDAO();
-    
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -55,7 +55,7 @@ public class ControllerDashboard extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
     }
 
     /**

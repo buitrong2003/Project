@@ -10,7 +10,7 @@ function updateCookie(bookId, newValue) {
     //expirationDate.setTime(expirationDate.getTime() + (1 * 60 * 60 * 1000)); // 1 giờ
     // Cập nhật giá trị của cookie
     //";expires=" + expirationDate.toUTCString()
-    document.cookie = cookieName + "=" + newValue  + ";path=/";
+    document.cookie = cookieName + "=" + newValue + ";path=/";
 }
 function nextPageButtonShoppingCart(page, limitPageCart) {
     const currentPage = parseInt(page);
@@ -51,7 +51,7 @@ var plusQuantity = (id) => {
     if (currentValue < maxValue) {
         input.value = currentValue + 1;
         let newValue = currentValue + 1;
-        updateCookie(id, newValue);
+        window.location.href = `process?id=${id}&quantity=${newValue}`;
     }
 };
 var minusQuantity = (id) => {
@@ -61,7 +61,7 @@ var minusQuantity = (id) => {
     if (currentValue > minValue) {
         input.value = currentValue - 1;
         let newValue = currentValue - 1;
-        updateCookie(id, newValue);
+        window.location.href = `process?id=${id}&quantity=${newValue}`;
     }
 };
 var getPriceBook = (price, id) => {

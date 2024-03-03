@@ -23,7 +23,9 @@ public class Cart {
         if (items != null) {
             listCart.get(userName).addAll(Arrays.asList(items));
         }
-        addItem(item, userName);
+        if (item != null) {
+            addItem(item, userName);
+        }
     }
 
     public int getQuantityById(int id, String userName) {
@@ -58,7 +60,7 @@ public class Cart {
     public double totalMoney(String userName) {
         double sum = 0;
         for (Item item : listCart.get(userName)) {
-            sum += item.getPrice() * item.getQuantity();
+            sum += (item.getPrice() * item.getQuantity());
         }
         return sum;
     }

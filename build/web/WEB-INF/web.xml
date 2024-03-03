@@ -44,6 +44,10 @@
         <servlet-name>ProductAdminServlet</servlet-name>
         <servlet-class>controller.admin.ProductAdminServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ProcessCart</servlet-name>
+        <servlet-class>controller.hompage.ProcessCart</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ControllerBook</servlet-name>
         <url-pattern>/home</url-pattern>
@@ -75,5 +79,9 @@
     <servlet-mapping>
         <servlet-name>ProductAdminServlet</servlet-name>
         <url-pattern>/admin/product</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProcessCart</servlet-name>
+        <url-pattern>/process</url-pattern>
     </servlet-mapping>
 </web-app>
