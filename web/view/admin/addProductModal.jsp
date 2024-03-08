@@ -93,20 +93,20 @@
                     <!--Description-->
                     <div class="form-group">
                         <label for="description">Description:</label>
-                        <textarea id="description" class="form-control" name="description"></textarea>
+                        <textarea id="descriptionInput" class="form-control" name="description"></textarea>
                         <div id="descriptionError" class="error"></div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn btn-primary" form="addProductForm" onclick="validateForm()">Add</button>
+                <button type="submit" class="btn btn-primary" form="addProductForm" onclick="validateForm(event)">Add</button>
             </div>
         </div>
     </div>
 </div>
 <script>
-    function validateForm() {
+    function validateForm(event) {
         let name = $('#nameInput').val();
         let author = $('#authorInput').val();
         let publisher = $('#publisherInput').val();
@@ -115,54 +115,57 @@
         let category = $('#category').val();
         let genre = $('#genreInput').val();
         let date = $('#dateInput').val();
-        let description = $('#description').val(); // Thêm kiểm tra cho trường Description
-
         // Xóa thông báo lỗi hiện tại
         $('.error').html('');
-
         // Kiểm tra từng trường và hiển thị thông báo lỗi tương ứng
         if (name === '') {
             $('#nameError').html('Tên không được để trống');
+            event.preventDefault();
         }
-
         if (author === '') {
             $('#authorError').html('Tên tác giả không được để trống');
+            event.preventDefault();
         }
-
         if (publisher === '') {
             $('#publisherError').html('Nhà xuất bản không được để trống');
+            event.preventDefault();
         }
-
         if (price === '') {
             $('#priceError').html('Giá không được để trống');
+            event.preventDefault();
         } else if (!$.isNumeric(price) || parseFloat(price) < 0) {
             $('#priceError').html('Giá phải là số và không được nhỏ hơn 0');
+            event.preventDefault();
         }
-
         if (quantity === '') {
             $('#quantityError').html('Số lượng không được để trống');
+            event.preventDefault();
         } else if (!$.isNumeric(quantity) || !Number.isInteger(parseFloat(quantity))) {
             $('#quantityError').html('Số lượng phải là số nguyên và không được nhỏ hơn 0');
+            event.preventDefault();
         } else if (parseInt(quantity) < 0) {
             $('#quantityError').html('Số lượng phải lớn hơn hoặc bằng 0');
+            event.preventDefault();
         }
 
         if (category === '') {
             $('#categoryError').html('Danh mục không được để trống');
+            event.preventDefault();
         }
-
         if (genre === '') {
             $('#genreError').html('Thể loại không được để trống');
+            event.preventDefault();
         }
-
         if (date === '') {
             $('#dateError').html('Ngày xuất bản không được để trống');
+            event.preventDefault();
         }
-
-        if (description === '') { // Kiểm tra trường Description
+        let description = document.getElementById('descriptionInput').text().trim(); // Thêm kiểm tra cho trường Description
+        console.log(description);
+        if (description === '' || description === null) { // Kiểm tra trường Description
             $('#descriptionError').html('Mô tả không được để trống');
+            event.preventDefault();
         }
-
         // Kiểm tra nếu không có lỗi thì submit form
         let error = '';
         $('.error').each(function () {
@@ -175,7 +178,6 @@
         }
     }
 
-
     function displayImage(input) {
         var previewImage = document.getElementById("previewImage");
         var file = input.files[0];
@@ -186,6 +188,158 @@
         };
         reader.readAsDataURL(file);
     }
-
-
 </script>
+<script>
+    CKEDITOR.ClassicEditor.create(document.getElementById("descriptionInput"), {
+// https://ckeditor.com/docs/ckeditor5/latest/features/toolbar/toolbar.html#extended-toolbar-configuration-format
+        toolbar: {
+            items: [
+                'exportPDF', 'exportWord', '|',
+                'findAndReplace', 'selectAll', '|',
+                'heading', '|',
+                'bold', 'italic', 'strikethrough', 'underline', 'code', 'subscript', 'superscript', 'removeFormat', '|',
+                'bulletedList', 'numberedList', 'todoList', '|',
+                'outdent', 'indent', '|',
+                'undo', 'redo',
+                '-',
+                'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', 'highlight', '|',
+                'alignment', '|',
+                'link', 'insertImage', 'blockQuote', 'insertTable', 'mediaEmbed', 'codeBlock', 'htmlEmbed', '|',
+                'specialCharacters', 'horizontalLine', 'pageBreak', '|',
+                'textPartLanguage', '|',
+                'sourceEditing'
+            ],
+            shouldNotGroupWhenFull: true
+        },
+// Changing the language of the interface requires loading the language file using the <script> tag.
+// language: 'es',
+        list: {
+            properties: {
+                styles: true,
+                startIndex: true,
+                reversed: true
+            }
+        },
+// https://ckeditor.com/docs/ckeditor5/latest/features/headings.html#configuration
+        heading: {
+            options: [
+                {model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph'},
+                {model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1'},
+                {model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2'},
+                {model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3'},
+                {model: 'heading4', view: 'h4', title: 'Heading 4', class: 'ck-heading_heading4'},
+                {model: 'heading5', view: 'h5', title: 'Heading 5', class: 'ck-heading_heading5'},
+                {model: 'heading6', view: 'h6', title: 'Heading 6', class: 'ck-heading_heading6'}
+            ]
+        },
+// https://ckeditor.com/docs/ckeditor5/latest/features/editor-placeholder.html#using-the-editor-configuration
+        placeholder: 'Welcome to CKEditor 5!',
+// https://ckeditor.com/docs/ckeditor5/latest/features/font.html#configuring-the-font-family-feature
+        fontFamily: {
+            options: [
+                'default',
+                'Arial, Helvetica, sans-serif',
+                'Courier New, Courier, monospace',
+                'Georgia, serif',
+                'Lucida Sans Unicode, Lucida Grande, sans-serif',
+                'Tahoma, Geneva, sans-serif',
+                'Times New Roman, Times, serif',
+                'Trebuchet MS, Helvetica, sans-serif',
+                'Verdana, Geneva, sans-serif'
+            ],
+            supportAllValues: true
+        },
+// https://ckeditor.com/docs/ckeditor5/latest/features/font.html#configuring-the-font-size-feature
+        fontSize: {
+            options: [10, 12, 14, 'default', 18, 20, 22],
+            supportAllValues: true
+        },
+// Be careful with the setting below. It instructs CKEditor to accept ALL HTML markup.
+// https://ckeditor.com/docs/ckeditor5/latest/features/general-html-support.html#enabling-all-html-features
+        htmlSupport: {
+            allow: [
+                {
+                    name: /.*/,
+                    attributes: true,
+                    classes: true,
+                    styles: true
+                }
+            ]
+        },
+// Be careful with enabling previews
+// https://ckeditor.com/docs/ckeditor5/latest/features/html-embed.html#content-previews
+        htmlEmbed: {
+            showPreviews: true
+        },
+// https://ckeditor.com/docs/ckeditor5/latest/features/link.html#custom-link-attributes-decorators
+        link: {
+            decorators: {
+                addTargetToExternalLinks: true,
+                defaultProtocol: 'https://',
+                toggleDownloadable: {
+                    mode: 'manual',
+                    label: 'Downloadable',
+                    attributes: {
+                        download: 'file'
+                    }
+                }
+            }
+        },
+// https://ckeditor.com/docs/ckeditor5/latest/features/mentions.html#configuration
+        mention: {
+            feeds: [
+                {
+                    marker: '@',
+                    feed: [
+                        '@apple', '@bears', '@brownie', '@cake', '@cake', '@candy', '@canes', '@chocolate', '@cookie', '@cotton', '@cream',
+                        '@cupcake', '@danish', '@donut', '@drag?e', '@fruitcake', '@gingerbread', '@gummi', '@ice', '@jelly-o',
+                        '@liquorice', '@macaroon', '@marzipan', '@oat', '@pie', '@plum', '@pudding', '@sesame', '@snaps', '@souffl?',
+                        '@sugar', '@sweet', '@topping', '@wafer'
+                    ],
+                    minimumCharacters: 1
+                }
+            ]
+        },
+// The "super-build" contains more premium features that require additional configuration, disable them below.
+// Do not turn them on unless you read the documentation and know how to configure them and setup the editor.
+        removePlugins: [
+            // These two are commercial, but you can try them out without registering to a trial.
+            // 'ExportPdf',
+            // 'ExportWord',
+            'CKBox',
+            'CKFinder',
+            'EasyImage',
+            // This sample uses the Base64UploadAdapter to handle image uploads as it requires no configuration.
+            // https://ckeditor.com/docs/ckeditor5/latest/features/images/image-upload/base64-upload-adapter.html
+            // Storing images as Base64 is usually a very bad idea.
+            // Replace it on production website with other solutions:
+            // https://ckeditor.com/docs/ckeditor5/latest/features/images/image-upload/image-upload.html
+            // 'Base64UploadAdapter',
+            'RealTimeCollaborativeComments',
+            'RealTimeCollaborativeTrackChanges',
+            'RealTimeCollaborativeRevisionHistory',
+            'PresenceList',
+            'Comments',
+            'TrackChanges',
+            'TrackChangesData',
+            'RevisionHistory',
+            'Pagination',
+            'WProofreader',
+            // Careful, with the Mathtype plugin CKEditor will not load when loading this sample
+            // from a local file system (file://) - load this site via HTTP server if you enable MathType.
+            'MathType',
+            // The following features are part of the Productivity Pack and require additional license.
+            'SlashCommand',
+            'Template',
+            'DocumentOutline',
+            'FormatPainter',
+            'TableOfContents'
+        ]
+    });
+    const editor = ClassicEditor
+            .create(document.querySelector('#descriptionInput'))
+            .catch(error => {
+                console.error(error);
+            });
+</script>
+

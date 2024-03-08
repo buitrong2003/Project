@@ -13,6 +13,21 @@
         <title>JSP Page</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/header.css"/>
+        <style>
+            .avatar-container {
+                width: 100%; /* Điều chỉnh kích thước hình ảnh nhỏ hơn */
+                height: 40px; /* Điều chỉnh kích thước hình ảnh nhỏ hơn */
+                border-radius: 50%; /* Tạo hình tròn */
+                overflow: hidden; /* Ẩn phần ngoài vùng hình tròn */
+            }
+
+            .avatar {
+                width: 200%; /* Đảm bảo hình ảnh điền đầy vùng hình tròn */
+                height: 100%; /* Đảm bảo hình ảnh điền đầy vùng hình tròn */
+                object-fit: cover; /* Đảm bảo hình ảnh không bị méo khi thu nhỏ */
+            }
+
+        </style>
     </head>
     <body>
         <div id="header">
@@ -26,7 +41,7 @@
                    onmouseout="this.style.backgroundColor = ''; this.style.color = '#267DFD';">
                     Home
                 </a>
-                <a style="cursor: pointer; margin-right: 10px; display: inline-block; transition: background-color 0.3s ease-in-out; padding: 5px; border-radius: 5px;height: 7vh;display: flex;align-items: center;width: 150%;justify-content: center"
+                <a href="profile" style="cursor: pointer; margin-right: 10px; display: inline-block; transition: background-color 0.3s ease-in-out; padding: 5px; border-radius: 5px;height: 7vh;display: flex;align-items: center;width: 150%;justify-content: center"
                    onmouseover="this.style.backgroundColor = 'purple'; this.style.color = 'white';"
                    onmouseout="this.style.backgroundColor = ''; this.style.color = '#267DFD';">
                     About me
@@ -38,8 +53,8 @@
                 </a>
                 <a style="cursor: pointer; margin-right: 10px; display: inline-block; transition: background-color 0.3s ease-in-out; padding: 5px; border-radius: 5px;height: 7vh;display: flex;align-items: center;width: 40%"
                    onmouseover="this.style.backgroundColor = 'purple'; this.style.color = 'white';"
-                   onmouseout="this.style.backgroundColor = ''; this.style.color = '#267DFD';">
-                    Hot
+                   onmouseout="this.style.backgroundColor = ''; this.style.color = '#267DFD';" href="contact">
+                    Contact
                 </a>
             </div>
             <div style="width: 20%;" id="actions">
@@ -47,11 +62,13 @@
                     <c:if test="${sessionScope.acount != null}">
                         <div id="accountInfo" class="account-info">                               
                             <div style="display: flex;margin-top: 5%;cursor: pointer">
-                                <img src="image/user.png"  alt="">
+                                <div class="avatar-container">
+                                    <img class="avatar" src="image/${sessionScope.acount.image}" alt="">
+                                </div>
                                 <div style="margin-left: 10%;">${sessionScope.acount.getUser_name()}</div>
                                 <div class="hidden-content">
                                     <div class="arrow-up"></div>
-                                    <div style="width: 100%;margin-top: 5%">Tài khoản của tôi</div>
+                                    <a href="profile" style="width: 100%;margin-top: 5%">Tài khoản của tôi</a>
                                     <div style="width: 100%;margin-top: 5%">Đơn mua</div>
                                     <div onclick="getLogout()" style="width: 100%;margin-top: 5%">Đăng xuất</div>
                                 </div>

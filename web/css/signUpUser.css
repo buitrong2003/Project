@@ -282,4 +282,9 @@ footer a {
     font-size: 50%;
     text-align: left;
 }
+.errorUsername {
+    color: red;
+    font-size: 50%;
+    text-align: left;
+}
 

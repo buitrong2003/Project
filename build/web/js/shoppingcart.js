@@ -2,16 +2,16 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/JavaScript.js to edit this template
  */
-function updateCookie(bookId, newValue) {
-    // Tên cookie cần được cập nhật
-    var cookieName = "caseNumber" + bookId;
-    // Thời gian hết hạn của cookie (ở đây tôi sẽ đặt cookie này hết hạn sau 1 giờ)
-    //var expirationDate = new Date();
-    //expirationDate.setTime(expirationDate.getTime() + (1 * 60 * 60 * 1000)); // 1 giờ
-    // Cập nhật giá trị của cookie
-    //";expires=" + expirationDate.toUTCString()
-    document.cookie = cookieName + "=" + newValue + ";path=/";
-}
+var getSubmitCheckout = (e) => {
+    let formSubmit = document.querySelector('.check-out-submit');
+    var totalMoney = parseInt(document.getElementById("total-price").textContent.trim());
+    if (totalMoney <= 0) {
+        e.preventDefault(); // Ngăn chặn hành động mặc định của sự kiện
+    } else {
+        formSubmit.submit(); // Submit form
+    }
+};
+
 function nextPageButtonShoppingCart(page, limitPageCart) {
     const currentPage = parseInt(page);
     const limitPage = parseInt(limitPageCart);
@@ -72,7 +72,7 @@ var getPriceBook = (price, id) => {
     formattedPrice = formattedPrice.replace(/,/g, '.');
     phoneTotal.innerHTML = '₫' + formattedPrice;
 };
-var getDelete = (id, page) => {
-    window.location.href = 'cart?id=' + id + '&page=' + page;
+var getDelete = (id) => {
+    window.location.href = 'cart?id=' + id;
 };
 

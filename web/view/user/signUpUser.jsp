@@ -20,8 +20,9 @@
                     <h1>Create Account</h1>
                     <span>or use your email for registration</span>                   
                     <input type="hidden" name="role" value="1"/>
+                    <input type="hidden" name="type" value="User" />
                     <input type="text" name="username" value="${requestScope.userName}" placeholder="Name" required="" />
-                    <div style="margin-right: 70%" id="errorAcount" class="error">${requestScope.error}</div>
+                    <div style="margin-right: 70%" id="errorAcount" class="errorUsername">${requestScope.error}</div>
                     <input type="email" name="email" value="${requestScope.email}" placeholder="Email" required="" />
                     <div class="password-container">
                         <input type="password" value="${requestScope.password}" name="password" id="passwordInput" placeholder="Password" class="passwordInput"  oninput="validatePassword()" required="" />

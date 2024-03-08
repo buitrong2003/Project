@@ -42,7 +42,6 @@ function getDetails(id) {
                 book[key] = value;
             }
         });
-        book['status'] = book['status'].replace(/\)$/g, '');
         return book;
     }
     let inputString = document.getElementById(id).value;

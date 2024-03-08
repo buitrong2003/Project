@@ -19,13 +19,12 @@
         <!-- Custom fonts for this template-->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
         <!-- Page level plugin CSS-->
-        <link href="../css/dataTables.bootstrap4.css" rel="stylesheet">
+        <link href="${pageContext.request.contextPath}/css/dataTables.bootstrap4.css" rel="stylesheet">
         <!-- Custom styles for this template-->
-        <link href="../css/sb-admin.css" rel="stylesheet">
-        <link rel="stylesheet" href="../css/colReorder-bootstrap4.css"/>
-        <script src="https://cdn.ckeditor.com/4.16.1/standard/ckeditor.js"></script>
-<!-- CKFinder -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/ckeditor/4.16.1/plugins/ckfinder/ckfinder.js"></script>
+        <link href="${pageContext.request.contextPath}/css/sb-admin.css" rel="stylesheet">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/colReorder-bootstrap4.css"/>
+        <!-- CKFinder -->
+
         <style>
             .error{
                 color:red;
@@ -56,7 +55,6 @@
                         </div>
                         <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
                     </div>
-
                     <!-- DataTables Example -->
                     <div class="card mb-3">
                         <div class="card-header">
@@ -88,7 +86,7 @@
                                                 <td name="id">${book.book_id}</td>
                                                 <td name="name">${book.name}</td>
                                                 <td name="image">
-                                                    <img style="width: 30%" src="../image/${book.image}" alt="alt"/>
+                                                    <img style="width: 30%" src="${pageContext.request.contextPath}/image/${book.image}" alt="alt"/>
                                                 </td>
                                                 <td name="author">${book.author}</td>
                                                 <td name="publisher">${book.publisher}</td>
@@ -140,28 +138,33 @@
             <i class="fas fa-angle-up"></i>
         </a>
         <!-- Logout Modal-->
+        <script src="${pageContext.request.contextPath}/lib/ckeditor/ckeditor.js"></script>
+        <script src="${pageContext.request.contextPath}/lib/ckfinder/ckfinder.js"></script>
+        <script src="https://cdn.ckeditor.com/ckeditor5/38.0.1/super-build/ckeditor.js"></script>
+        <script src="https://cdn.ckeditor.com/ckeditor5/38.0.1/classic/translations/vi.js"></script>
+        <script src="https://cdn.ckeditor.com/ckeditor5/38.0.1/media-embed/media-embed.js"></script>
         <%@include file="../common/admin/logoutModal.jsp" %>
         <jsp:include page="addProductModal.jsp"></jsp:include>
         <jsp:include page="deleteProductModal.jsp"></jsp:include>
         <jsp:include page="editProductModal.jsp"></jsp:include>
-        <!-- Bootstrap core JavaScript-->
-        <script src="../js/admin/jquery.min.js"></script>
-        <script src="../js/admin/bootstrap.bundle.min.js"></script>
+            <!-- Bootstrap core JavaScript-->
+            <script src="${pageContext.request.contextPath}/js/admin/jquery.min.js"></script>
+        <script src="${pageContext.request.contextPath}/js/admin/bootstrap.bundle.min.js"></script>
         <!-- Core plugin JavaScript-->
-        <script src="../js/admin/jquery.easing.min.js"></script>
+        <script src="${pageContext.request.contextPath}/js/admin/jquery.easing.min.js"></script>
         <!-- Page level plugin JavaScript-->
-        <script src="../js/admin/Chart.min.js"></script>
-        <script src="../js/admin/jquery.dataTables.js"></script>
-        <script src="../js/admin/dataTables.bootstrap4.js"></script>
+        <script src="${pageContext.request.contextPath}/js/admin/Chart.min.js"></script>
+        <script src="${pageContext.request.contextPath}/js/admin/jquery.dataTables.js"></script>
+        <script src="${pageContext.request.contextPath}/js/admin/dataTables.bootstrap4.js"></script>
         <!-- Custom scripts for all pages-->
-        <script src="../js/admin/sb-admin.min.js"></script>
-        <script src="../js/admin/colReorder-bootstrap4-min.js"></script>
-        <script src="../js/admin/colReorder-dataTables-min.js"></script>
+        <script src="${pageContext.request.contextPath}/js/admin/sb-admin.min.js"></script>
+        <script src="${pageContext.request.contextPath}/js/admin/colReorder-bootstrap4-min.js"></script>
+        <script src="${pageContext.request.contextPath}/js/admin/colReorder-dataTables-min.js"></script>
         <!-- Demo scripts for this page-->
-        <script src="../js/admin/datatables-demo.js"></script>
-        <script src="../js/admin/chart-area-demo.js"></script>
-        <script src="../js/admin/colReorder-dataTables-min.js"></script>
-        <script src="../js/admin/colReorder-bootstrap4-min.js"></script>
+        <script src="${pageContext.request.contextPath}/js/admin/datatables-demo.js"></script>
+        <script src="${pageContext.request.contextPath}/js/admin/chart-area-demo.js"></script>
+        <script src="${pageContext.request.contextPath}/js/admin/colReorder-dataTables-min.js"></script>
+        <script src="${pageContext.request.contextPath}/js/admin/colReorder-bootstrap4-min.js"></script>
     </body>
 
 </html>

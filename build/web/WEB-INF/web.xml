@@ -1,17 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
-    <filter>
-        <filter-name>RoleAdmin</filter-name>
-        <filter-class>filter.RoleAdmin</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>RoleAdmin</filter-name>
-        <url-pattern>/home</url-pattern>
-    </filter-mapping>
-    <filter-mapping>
-        <filter-name>RoleAdmin</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
     <servlet>
         <servlet-name>ControllerBook</servlet-name>
         <servlet-class>controller.hompage.ControllerBook</servlet-class>
@@ -30,11 +18,11 @@
     </servlet>
     <servlet>
         <servlet-name>ControllerSignIn</servlet-name>
-        <servlet-class>controller.user.ControllerSignIn</servlet-class>
+        <servlet-class>controller.authen.ControllerSignIn</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ControllerSignUp</servlet-name>
-        <servlet-class>controller.user.ControllerSignUp</servlet-class>
+        <servlet-class>controller.authen.ControllerSignUp</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ControllerDashboard</servlet-name>
@@ -47,6 +35,30 @@
     <servlet>
         <servlet-name>ProcessCart</servlet-name>
         <servlet-class>controller.hompage.ProcessCart</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CategoryAdminServlet</servlet-name>
+        <servlet-class>controller.admin.CategoryAdminServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UserAdminServlet</servlet-name>
+        <servlet-class>controller.admin.UserAdminServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ControllerContact</servlet-name>
+        <servlet-class>controller.hompage.ControllerContact</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ControllerProfile</servlet-name>
+        <servlet-class>controller.hompage.ControllerProfile</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ControllerCheckOut</servlet-name>
+        <servlet-class>controller.hompage.ControllerCheckOut</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ControllerChart</servlet-name>
+        <servlet-class>controller.admin.ControllerChart</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>ControllerBook</servlet-name>
@@ -83,5 +95,52 @@
     <servlet-mapping>
         <servlet-name>ProcessCart</servlet-name>
         <url-pattern>/process</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CategoryAdminServlet</servlet-name>
+        <url-pattern>/admin/category</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UserAdminServlet</servlet-name>
+        <url-pattern>/admin/user</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>ConnectorServlet</servlet-name>
+        <servlet-class>com.ckfinder.connector.ConnectorServlet</servlet-class>
+        <init-param>
+            <description>
+                Path to configuration file can be relative path inside application,
+                absolute path on local file system or UNC path.
+            </description>
+            <param-name>XMLConfig</param-name>
+            <param-value>/WEB-INF/config.xml</param-value>
+        </init-param>
+        <init-param>
+            <param-name>debug</param-name>
+            <param-value>false</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ConnectorServlet</servlet-name>
+        <url-pattern>
+            /lib/ckfinder/core/connector/java/connector.java
+        </url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ControllerContact</servlet-name>
+        <url-pattern>/contact</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ControllerProfile</servlet-name>
+        <url-pattern>/profile</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ControllerCheckOut</servlet-name>
+        <url-pattern>/checkout</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ControllerChart</servlet-name>
+        <url-pattern>/admin/chart</url-pattern>
     </servlet-mapping>
 </web-app>

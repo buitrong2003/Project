@@ -31,4 +31,14 @@ function validatePassword() {
         confirmPasswordError.textContent = "";
     }
 }
-
+let error = document.querySelectorAll('.error');
+// Xử lý sự kiện submit của form
+document.querySelector('form').addEventListener('submit', function (e) {
+    // Kiểm tra nếu có lỗi
+    error.forEach(err => {
+        if (err.textContent !== "") {
+            e.preventDefault();
+        }
+    });
+    // Ngăn chặn hành vi mặc định của sự kiện submit
+});

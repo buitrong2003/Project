@@ -219,8 +219,7 @@
         $('#descriptionEdit').val(description);
         $('#previewImage2').attr('src', image);
         $('#previewImage2').css('display', 'block');
-        $('#currentImage').val(image);
+        let filename = image.substring(image.lastIndexOf('/') + 1);
+        $('#currentImage').val(filename);
     }
-
-
 </script>

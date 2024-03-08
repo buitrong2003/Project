@@ -6,7 +6,6 @@ package controller.hompage;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import dal.implement.BookDAO;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -15,10 +14,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import model.Book;
 import model.Cart;
 import model.Item;
 import model.User;
@@ -40,14 +39,15 @@ public class ControllerCart extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession(false);
+        HttpSession session = request.getSession();
         User user = (User) session.getAttribute("acount");
+        String username = user == null ? "|" : user.getUser_name();
         Cookie[] cookies = request.getCookies();
         response.setContentType("application/json; charset=UTF-8");
         String listCartJson = null;
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                if (cookie.getName().equals(user.getUser_name())) {
+                if (cookie.getName().equals(username)) {
                     listCartJson = URLDecoder.decode(cookie.getValue(), "UTF-8");
                 }
             }
@@ -60,8 +60,8 @@ public class ControllerCart extends HttpServlet {
         if (listCartJson != null) {
             listItem.addAll(Arrays.asList(itemArray));
         }
-        Cart cart = new Cart(user.getUser_name(), itemArray, null);
-        double totalMoney = cart.totalMoney(user.getUser_name());
+        Cart cart = new Cart(username, itemArray, null);
+        double totalMoney = cart.totalMoney(username);
         request.setAttribute("totalMoney", totalMoney);
         request.setAttribute("listItem", listItem);
         request.getRequestDispatcher("view/shoppingcart.jsp").forward(request, response);
@@ -78,37 +78,40 @@ public class ControllerCart extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession(false);
+        HttpSession session = request.getSession();
         User user = (User) session.getAttribute("acount");
-        BookDAO daoBook = new BookDAO();
+        String username = user == null ? "|" : user.getUser_name();
+        int id = Integer.parseInt(request.getParameter("id"));
         Cookie[] cookies = request.getCookies();
         response.setContentType("application/json; charset=UTF-8");
         String listCartJson = null;
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                if (cookie.getName().equals(user.getUser_name())) {
-                    // Decode giá trị của cookie nếu cần
+                if (cookie.getName().equals(username)) {
                     listCartJson = URLDecoder.decode(cookie.getValue(), "UTF-8");
                 }
             }
         }
-        // Parse chuỗi JSON thành danh sách đối tượng
-        List<Book> listCartBook = new ArrayList<>();
+        Gson gsonItem = new GsonBuilder()
+                .registerTypeAdapter(Item[].class, new ItemDeserialize())
+                .create();
+        Item[] itemArray = gsonItem.fromJson(listCartJson, Item[].class);
+        Cart cart = null;
         if (listCartJson != null) {
-            Gson gson = new Gson();
-            Book[] booksArray = gson.fromJson(listCartJson, Book[].class);
-            listCartBook.addAll(Arrays.asList(booksArray));
+            cart = new Cart(username, itemArray, null);
         }
-        int limit = 5;
-        String raw_page = request.getParameter("page") == null ? "1" : request.getParameter("page");
-        int page = Integer.parseInt(raw_page);
-        int limitPage = listCartBook.size() / limit + (listCartBook.size() % limit == 0 ? 0 : 1);
-        if (limitPage > 1) {
-            //listCartBook = daoBook.getListBookPagination(page, limit, listCartBook);
+        if (cart != null) {
+            cart.deleteItem(id, username);
+            String jsonCart = new Gson().toJson(cart.getListCart().get(username));
+            String encodedJson = URLEncoder.encode(jsonCart, "UTF-8");
+            Cookie cookieItem = new Cookie(username, encodedJson);
+            cookieItem.setPath("/");
+            cookieItem.setMaxAge(86400);
+            response.addCookie(cookieItem);
+            double totalMoney = cart.totalMoney(username);
+            request.setAttribute("totalMoney", totalMoney);
+            request.setAttribute("listItem", cart.getListCart().get(username));
         }
-        request.setAttribute("page", page);
-        request.setAttribute("limitPage", limitPage);
-        request.setAttribute("listBookCart", listCartBook);
         request.getRequestDispatcher("view/shoppingcart.jsp").forward(request, response);
     }
 

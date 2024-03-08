@@ -79,9 +79,7 @@ public class BookDAO extends GenericDAO<Book> {
                 + "           ,[publication_date]\n"
                 + "           ,[image]\n"
                 + "           ,[category_id]\n"
-                + "           ,[book_hot]\n"
-                + "           ,[status]\n"
-                + "           ,[delete_date])\n"
+                + "           ,[book_hot])\n"
                 + "     VALUES\n"
                 + "           (?\n"
                 + "           ,?\n"
@@ -93,9 +91,7 @@ public class BookDAO extends GenericDAO<Book> {
                 + "           ,?\n"
                 + "           ,?\n"
                 + "           ,?\n"
-                + "           ,?\n"
-                + "           ,?\n"
-                + "           ,?) ";
+                + "           ,?)";
         parameterMap = new LinkedHashMap<>();
         parameterMap.put("name", book.getName());
         parameterMap.put("author", book.getAuthor());
@@ -108,8 +104,6 @@ public class BookDAO extends GenericDAO<Book> {
         parameterMap.put("image", book.getImage());
         parameterMap.put("category_id", book.getCategory_id());
         parameterMap.put("book_hot", book.getBook_hot());
-        parameterMap.put("status", book.getStatus());
-        parameterMap.put("deleteDate", new java.sql.Date(new Date().getTime()));
         return insertGenericDAO(sql, parameterMap);
     }
 
@@ -183,6 +177,44 @@ public class BookDAO extends GenericDAO<Book> {
 
     public int findTotalRecord() {
         return findTotalRecordGenericDAO(Book.class);
+    }
+
+    public void updateBook(Book book) {
+        String sql = "UPDATE [dbo].[Book]\n"
+                + "   SET [name] = ?\n"
+                + "      ,[author] = ?\n"
+                + "      ,[publisher] = ?\n"
+                + "      ,[price] = ?\n"
+                + "      ,[description] = ?\n"
+                + "      ,[genre] = ?\n"
+                + "      ,[quantity] = ?\n"
+                + "      ,[publication_date] = ?\n"
+                + "      ,[image] = ?\n"
+                + "      ,[category_id] = ?\n"
+                + "      ,[book_hot] = ?\n"
+                + " WHERE [book_id] = ?";
+        parameterMap = new LinkedHashMap<>();
+        parameterMap.put("name", book.getName());
+        parameterMap.put("author", book.getAuthor());
+        parameterMap.put("pulisher", book.getPublisher());
+        parameterMap.put("price", book.getPrice());
+        parameterMap.put("description", book.getDescription());
+        parameterMap.put("genre", book.getGenre());
+        parameterMap.put("quantity", book.getQuantity());
+        parameterMap.put("publication_date", book.getPublication_date());
+        parameterMap.put("image", book.getImage());
+        parameterMap.put("category_id", book.getCategory_id());
+        parameterMap.put("book_hot", book.getBook_hot());
+        parameterMap.put("id", book.getBook_id());
+        updateGenericDAO(sql, parameterMap);
+    }
+
+    public void deleteBook(int id) {
+        String sql = "DELETE FROM [dbo].[Book]\n"
+                + "      WHERE book_id = ?";
+        parameterMap = new LinkedHashMap<>();
+        parameterMap.put("id", id);
+        deleteGenericDAO(sql, parameterMap);
     }
 
 }

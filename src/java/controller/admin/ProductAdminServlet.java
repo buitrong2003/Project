@@ -4,9 +4,7 @@
  */
 package controller.admin;
 
-import constant.CommonConst;
 import dal.implement.BookDAO;
-import dal.implement.CategoryDAO;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -35,7 +33,6 @@ public class ProductAdminServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     BookDAO daoBook = new BookDAO();
-    CategoryDAO daoCategory = new CategoryDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -57,14 +54,15 @@ public class ProductAdminServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
-        String acrion = request.getParameter("action") == null ? ""
+        String action = request.getParameter("action") == null ? ""
                 : request.getParameter("action");
-        switch (acrion) {
+        switch (action) {
             case "add" ->
                 addProduct(request);
+            case "edit" ->
+                updateProduct(request);
             case "delete" -> {
-                int id = Integer.parseInt(request.getParameter("id"));
-
+                deleteProduct(request);
             }
         }
         response.sendRedirect("dashboard");
@@ -115,7 +113,6 @@ public class ProductAdminServlet extends HttpServlet {
                         .description(description)
                         .image(pathOfFile)
                         .book_hot(0)
-                        .status(CommonConst.BOOK_STATUS)
                         .build();
                 daoBook.insert(book);
             }
@@ -124,4 +121,54 @@ public class ProductAdminServlet extends HttpServlet {
         }
     }
 
+    private void deleteProduct(HttpServletRequest request) {
+        int id = Integer.parseInt(request.getParameter("id"));
+        daoBook.deleteBook(id);
+    }
+
+    private void updateProduct(HttpServletRequest request) {
+        try {
+            int id = Integer.parseInt(request.getParameter("id"));
+            String name = request.getParameter("name");
+            String author = request.getParameter("author");
+            String publisher = request.getParameter("publisher");
+            Date date = Date.valueOf(request.getParameter("date"));
+            String genre = request.getParameter("genre");
+            double price = Double.parseDouble(request.getParameter("price"));
+            int quantity = Integer.parseInt(request.getParameter("quantity"));
+            int category = Integer.parseInt(request.getParameter("category"));
+            String description = request.getParameter("description");
+            Part part = request.getPart("image");
+            String imagePath = null;
+            if (part.getSubmittedFileName() == null || part.getSubmittedFileName().trim().isEmpty()
+                    || part == null) {
+                imagePath = request.getParameter("currentImage");
+            } else {
+                String path = request.getServletContext().getRealPath("/image");
+                File file = new File(path);
+                if (!file.exists()) {
+                    file.mkdirs();
+                }
+                File image = new File(file, part.getSubmittedFileName());
+                part.write(image.getAbsolutePath());
+                imagePath = image.getName();
+            }
+            Book book = Book.builder()
+                    .book_id(id)
+                    .name(name)
+                    .author(author)
+                    .publisher(publisher)
+                    .publication_date(date)
+                    .genre(genre)
+                    .price(price)
+                    .quantity(quantity)
+                    .category_id(category)
+                    .description(description)
+                    .image(imagePath)
+                    .book_hot(0)
+                    .build();
+            daoBook.updateBook(book);
+        } catch (IOException | ServletException | NumberFormatException ex) {
+        }
+    }
 }

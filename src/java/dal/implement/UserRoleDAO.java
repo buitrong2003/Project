@@ -32,4 +32,12 @@ public class UserRoleDAO extends GenericDAO<UserRole> {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
+    public void deleteUser(String username) {
+        String sql = "delete from UserRole where \n"
+                + "[user_name] = ?";
+        parameterMap = new LinkedHashMap<>();
+        parameterMap.put("username", username);
+        deleteGenericDAO(sql, parameterMap);
+    }
+
 }

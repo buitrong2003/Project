@@ -39,13 +39,14 @@ public class ProcessCart extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         User user = (User) session.getAttribute("acount");
+        String username = user == null ? "|" : user.getUser_name();
         Cookie[] cookies = request.getCookies();
         response.setContentType("application/json; charset=UTF-8");
         String listCartJson = null;
         Item[] itemArray = null;
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                if (cookie.getName().equals(user.getUser_name())) {
+                if (cookie.getName().equals(username)) {
                     listCartJson = URLDecoder.decode(cookie.getValue(), "UTF-8");
                 }
             }
@@ -54,22 +55,22 @@ public class ProcessCart extends HttpServlet {
                 .registerTypeAdapter(Item[].class, new ItemDeserialize())
                 .create();
         itemArray = gsonItem.fromJson(listCartJson, Item[].class);
-        Cart cart = new Cart(user.getUser_name(), itemArray, null);
+        Cart cart = new Cart(username, itemArray, null);
         int id = Integer.parseInt(request.getParameter("id"));
         int quantity = Integer.parseInt(request.getParameter("quantity"));
-        Item item = cart.getItemById(user.getUser_name(), id);
+        Item item = cart.getItemById(username, id);
         item.setQuantity(quantity);
         if (item.getQuantity() <= 0) {
-            cart.getListCart().get(user.getUser_name()).remove(item);
+            cart.getListCart().get(username).remove(item);
         }
-        String jsonCart = new Gson().toJson(cart.getListCart().get(user.getUser_name()));
+        String jsonCart = new Gson().toJson(cart.getListCart().get(username));
         String encodedJson = URLEncoder.encode(jsonCart, "UTF-8");
-        Cookie cookieItem = new Cookie(user.getUser_name(), encodedJson);
+        Cookie cookieItem = new Cookie(username, encodedJson);
         cookieItem.setPath("/");
         response.addCookie(cookieItem);
-        double totalMoney = cart.totalMoney(user.getUser_name());
+        double totalMoney = cart.totalMoney(username);
         request.setAttribute("totalMoney", totalMoney);
-        request.setAttribute("listItem", cart.getListCart().get(user.getUser_name()));
+        request.setAttribute("listItem", cart.getListCart().get(username));
         request.getRequestDispatcher("view/shoppingcart.jsp").forward(request, response);
     }
 

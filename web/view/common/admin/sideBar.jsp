@@ -7,7 +7,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <ul class="sidebar navbar-nav">
     <li class="nav-item active">
-        <a class="nav-link" href="index.html">
+        <a class="nav-link" href="../admin/dashboard">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span>
         </a>
@@ -30,7 +30,7 @@
         </div>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="charts.html">
+        <a class="nav-link" href="chart">
             <i class="fas fa-fw fa-chart-area"></i>
             <span>Charts</span></a>
     </li>
@@ -39,4 +39,16 @@
             <i class="fas fa-fw fa-table"></i>
             <span>Tables</span></a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link" href="../admin/category">
+            <i class="fas fa-fw fa-list-alt"></i>
+            <span>Category</span></a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="../admin/user">
+            <i class="fas fa-fw fa-user"></i>
+            <span>User</span>
+        </a>
+    </li>
+
 </ul>

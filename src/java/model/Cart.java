@@ -50,8 +50,8 @@ public class Cart {
         }
     }
 
-    public void deleteItem(Item item, String userName) {
-        Item itemCart = getItemById(userName, item.getBook().getBook_id());
+    public void deleteItem(int id, String userName) {
+        Item itemCart = getItemById(userName, id);
         if (itemCart != null) {
             listCart.get(userName).remove(itemCart);
         }

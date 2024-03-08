@@ -34,11 +34,10 @@ public class BookDeserializer implements JsonDeserializer<Book> {
         String image = jsonBook.get("image").getAsString();
         int categoryId = Integer.parseInt(jsonBook.get("category_id").getAsString());
         int bookHot = Integer.parseInt(jsonBook.get("book_hot").getAsString());
-        int status = Integer.parseInt(jsonBook.get("status").getAsString());
         Book book = new Book(id, name, author, publisher, price,
                 description, genre, quantity,
                 publicationDate, image, categoryId,
-                bookHot, status);
+                bookHot);
         return book;
     }
 

@@ -48,14 +48,13 @@ public class ControllerDetails extends HttpServlet {
             Book book = gson.fromJson(bookJSON, Book.class);
             HttpSession session = request.getSession(false);
             User user = (User) session.getAttribute("acount");
+            String username = user == null ? "|" : user.getUser_name();
             String listCartJson = null;
-            if (user != null) {
-                Cookie[] cookies = request.getCookies();
-                if (cookies != null) {
-                    for (Cookie cookie : cookies) {
-                        if (cookie.getName().equalsIgnoreCase(user.getUser_name())) {
-                            listCartJson = URLDecoder.decode(cookie.getValue(), "UTF-8");
-                        }
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if (cookie.getName().equalsIgnoreCase(username)) {
+                        listCartJson = URLDecoder.decode(cookie.getValue(), "UTF-8");
                     }
                 }
             }
@@ -92,14 +91,15 @@ public class ControllerDetails extends HttpServlet {
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(Book.class, new BookDeserializer())
                 .create();
-        HttpSession session = request.getSession(false);
+        HttpSession session = request.getSession();
         User user = (User) session.getAttribute("acount");
+        String username = user == null ? "|" : user.getUser_name();
         Cookie[] cookies = request.getCookies();
         Item[] itemArray = null;
         String listCartJson = null;
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                if (cookie.getName().equalsIgnoreCase(user.getUser_name())) {
+                if (cookie.getName().equalsIgnoreCase(username)) {
                     listCartJson = URLDecoder.decode(cookie.getValue(), "UTF-8");
                 }
             }
@@ -115,14 +115,15 @@ public class ControllerDetails extends HttpServlet {
             response.setContentType("application/json; charset=UTF-8");
             Book book = gson.fromJson(bookJSON, Book.class);
             Item item = new Item(book, quantity, book.getPrice());
-            Cart cart = new Cart(user.getUser_name(), itemArray, item);
-            item = cart.getItemById(user.getUser_name(), book.getBook_id());
-            String jsonCart = new Gson().toJson(cart.getListCart().get(user.getUser_name()));
+            Cart cart = new Cart(username, itemArray, item);
+            item = cart.getItemById(username, book.getBook_id());
+            String jsonCart = new Gson().toJson(cart.getListCart().get(username));
             String encodedJson = URLEncoder.encode(jsonCart, "UTF-8");
             if (quantity > book.getQuantity() - item.getQuantity()) {
                 quantity = book.getQuantity() - item.getQuantity();
             }
-            Cookie cookieItem = new Cookie(user.getUser_name(), encodedJson);
+            Cookie cookieItem = new Cookie(username, encodedJson);
+            cookieItem.setMaxAge(86400);
             cookieItem.setPath("/");
             response.addCookie(cookieItem);
             request.setAttribute("book", item.getBook());

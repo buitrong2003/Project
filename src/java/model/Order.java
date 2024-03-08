@@ -4,7 +4,7 @@
  */
 package model;
 
-import java.util.Date;
+import java.sql.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,16 +26,11 @@ import lombok.ToString;
 @Setter
 public class Order {
 
-    private int book_id;
-    private String name;
-    private String author;
-    private String publisher;
-    private double price;
-    private String description;
-    private String genre;
+    private int order_id;
+    private String order_name;
+    private Date order_date;
+    private double total_amount;
+    private int id_status;
     private int quantity;
-    private Date publication_date;
-    private String image;
-    private int category_id;
-    private int book_hot;
+    private double price;
 }

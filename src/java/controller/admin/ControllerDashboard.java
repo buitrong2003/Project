@@ -37,6 +37,7 @@ public class ControllerDashboard extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
         List<Book> listBook = daoBook.findAll();
         List<Category> listCategory = daoCategory.findAll();
         request.setAttribute(CommonConst.REQUEST_BOOK, listBook);

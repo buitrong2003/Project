@@ -17,7 +17,7 @@ public class AcountDAO extends GenericDAO<User> {
 
     @Override
     public List<User> findAll() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return queryGenericDAO(User.class);
     }
 
     @Override
@@ -25,16 +25,45 @@ public class AcountDAO extends GenericDAO<User> {
         String sql = "INSERT INTO [dbo].[User]\n"
                 + "           ([user_name]\n"
                 + "           ,[password]\n"
-                + "           ,[email])\n"
+                + "           ,[email]\n"
+                + "           ,[image]\n"
+                + "           ,[type])\n"
                 + "     VALUES\n"
                 + "           (?\n"
+                + "           ,?\n"
+                + "           ,?\n"
                 + "           ,?\n"
                 + "           ,?)";
         parameterMap = new LinkedHashMap<>();
         parameterMap.put("username", user.getUser_name());
         parameterMap.put("password", user.getPassword());
         parameterMap.put("email", user.getEmail());
+        parameterMap.put("image", user.getImage());
+        parameterMap.put("type", user.getType());
         return insertGenericDAO(sql, parameterMap);
+    }
+
+    public void updateUser(User user) {
+        String sql = "UPDATE [dbo].[User]\n"
+                + "   SET [password] = ?\n"
+                + "      ,[email] = ?\n"
+                + "      ,[image] = ?\n"
+                + "      ,[type] = ?\n"
+                + " WHERE [user_name] = ?";
+        parameterMap = new LinkedHashMap<>();
+        parameterMap.put("password", user.getPassword());
+        parameterMap.put("email", user.getEmail());
+        parameterMap.put("image", user.getImage());
+        parameterMap.put("type", user.getType());
+        parameterMap.put("username", user.getUser_name());
+        updateGenericDAO(sql, parameterMap);
+    }
+
+    public List<User> getListByUser() {
+        String sql = "select * from [User] where [type] != ? ";
+        parameterMap = new LinkedHashMap<>();
+        parameterMap.put("type", "Admin");
+        return queryGenericDAO(User.class, sql, parameterMap);
     }
 
     public User getUser(String username, String password) {
@@ -43,22 +72,18 @@ public class AcountDAO extends GenericDAO<User> {
         parameterMap.put("username", username);
         parameterMap.put("password", password);
         List<User> listUser = queryGenericDAO(User.class, sql, parameterMap);
-        if(listUser.isEmpty()) {
+        if (listUser.isEmpty()) {
             return null;
         }
         return listUser.get(0);
     }
 
-    public void addUserRole(String username, int role) {
-        String sql = "INSERT INTO [dbo].[UserRole]\n"
-                + "           ([user_name]\n"
-                + "           ,[id_role])\n"
-                + "     VALUES\n"
-                + "           (?\n"
-                + "           ,?)";
+    public User checkExistAcount(String username) {
+        String sql = "select * from [User]\n"
+                + "where [user_name] = ?";
         parameterMap = new LinkedHashMap<>();
         parameterMap.put("username", username);
-        parameterMap.put("role", role);
-        insertGenericDAO(sql, parameterMap);
+        List<User> listUser = queryGenericDAO(User.class, sql, parameterMap);
+        return listUser.isEmpty() ? null : listUser.get(0);
     }
 }
