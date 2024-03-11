@@ -5,13 +5,19 @@
 package controller.hompage;
 
 import dal.implement.BookDAO;
+import dal.implement.ProposeDAO;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import model.Book;
+import model.Propose;
+import model.User;
 
 /**
  *
@@ -31,6 +37,15 @@ public class ControllerBook extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         BookDAO daoBook = new BookDAO();
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("acount");
+        if (user != null) {
+            List<Book> listBook = daoBook.findAll();
+            ProposeDAO daoPropose = new ProposeDAO();
+            List<Propose> listPropose = daoPropose.getListPropose(user.getUser_name());
+            Set<Book> listBookPropose = getListBookPropose(listBook, listPropose);
+            request.setAttribute("listPropose", listBookPropose);
+        }
         List<Book> listBookHot = daoBook.getListBookHot();
         List<Book> listNewBook = daoBook.getListNewBook();
         request.setAttribute("listBookHot", listBookHot);
@@ -77,4 +92,17 @@ public class ControllerBook extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
+    private Set<Book> getListBookPropose(List<Book> listBook, List<Propose> listPropose) {
+        Set<Book> proposedBooks = new HashSet<>();
+        for (Propose propose : listPropose) {
+            for (Book book : listBook) {
+                if ((book.getCategory_id() == (propose.getCategory_id()) || book.getAuthor().equals(propose.getAuthor()))
+                        && book.getBook_id() != propose.getBook_id()) {
+                    proposedBooks.add(book);
+                    break;
+                }
+            }
+        }
+        return proposedBooks;
+    }
 }

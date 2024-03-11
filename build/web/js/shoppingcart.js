@@ -2,10 +2,46 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/JavaScript.js to edit this template
  */
+function validateForm() {
+    var name = document.getElementById("name").value.trim();
+    var email = document.getElementById("email").value.trim();
+    var phone = document.getElementById("phone").value.trim();
+    var address = document.getElementById("address").value.trim();
+    var isValid = true;
+    if (name === "") {
+        document.getElementById("nameError").style.display = "block";
+        isValid = false;
+    } else {
+        document.getElementById("nameError").style.display = "none";
+    }
+    var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)) {
+        document.getElementById("emailError").style.display = "block";
+        isValid = false;
+    } else {
+        document.getElementById("emailError").style.display = "none";
+    }
+    var phonePattern = /^\d{10,11}$/;
+    if (!phonePattern.test(phone)) {
+        document.getElementById("phoneError").style.display = "block";
+        isValid = false;
+    } else {
+        document.getElementById("phoneError").style.display = "none";
+    }
+
+    if (address === "") {
+        document.getElementById("addressError").style.display = "block";
+        isValid = false;
+    } else {
+        document.getElementById("addressError").style.display = "none";
+    }
+    return isValid;
+}
 var getSubmitCheckout = (e) => {
+    let isvalid = validateForm();
     let formSubmit = document.querySelector('.check-out-submit');
     var totalMoney = parseInt(document.getElementById("total-price").textContent.trim());
-    if (totalMoney <= 0) {
+    if (totalMoney <= 0 || !isvalid) {
         e.preventDefault(); // Ngăn chặn hành động mặc định của sự kiện
     } else {
         formSubmit.submit(); // Submit form

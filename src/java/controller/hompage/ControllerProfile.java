@@ -33,7 +33,7 @@ public class ControllerProfile extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     AcountDAO daoAcount = new AcountDAO();
-    
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

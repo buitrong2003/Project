@@ -7,7 +7,6 @@ package dal.implement;
 import constant.CommonConst;
 import dal.GenericDAO;
 import java.util.Collections;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import model.Book;
@@ -31,8 +30,8 @@ public class BookDAO extends GenericDAO<Book> {
     }
 
     public List<Book> getListNewBook() {
-        String sql = "SELECT TOP 12 * FROM [Book]\n"
-                + "order by publication_date desc";
+        String sql = "select top 12 * from [Book]\n"
+                + "order by book_id desc";
         parameterMap = new LinkedHashMap<>();
         return queryGenericDAO(Book.class, sql, parameterMap);
     }
@@ -215,6 +214,16 @@ public class BookDAO extends GenericDAO<Book> {
         parameterMap = new LinkedHashMap<>();
         parameterMap.put("id", id);
         deleteGenericDAO(sql, parameterMap);
+    }
+
+    public void setQuantity(int book_id, int quantity) {
+        String sql = "UPDATE [dbo].[Book]\n"
+                + "   SET [quantity] = ?\n"
+                + " WHERE book_id = ?";
+        parameterMap = new LinkedHashMap<>();
+        parameterMap.put("quantity", quantity);
+        parameterMap.put("id", book_id);
+        updateGenericDAO(sql, parameterMap);
     }
 
 }

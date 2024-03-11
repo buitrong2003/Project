@@ -4,14 +4,15 @@
  */
 package controller.admin;
 
-import dal.implement.BookDAO;
+import dal.implement.StatisticalDAO;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.time.LocalDate;
 import java.util.List;
-import model.Book;
+import model.Statistical;
 
 /**
  *
@@ -28,13 +29,17 @@ public class ControllerChart extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    BookDAO daoBook = new BookDAO();
+    StatisticalDAO daoStatistical = new StatisticalDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        List<Book> listBook = daoBook.getListBookHot();
-        request.setAttribute("listBook", listBook);
+        LocalDate currentDate = LocalDate.now();
+        int year = currentDate.getYear();
+        List<Statistical> listStatistical = daoStatistical.getListStatistical(year + "");
+        double totalAmount = getTotalAmount(listStatistical);
+        request.setAttribute("totalAmount", totalAmount);
+        request.setAttribute("listStatistical", listStatistical);
         request.getRequestDispatcher("../view/admin/chart.jsp").forward(request, response);
     }
 
@@ -61,5 +66,13 @@ public class ControllerChart extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
+    private double getTotalAmount(List<Statistical> listStatistical) {
+        double sum = 0;
+        for (Statistical statistical : listStatistical) {
+            sum += statistical.getTotalAmount();
+        }
+        return sum;
+    }
 
 }

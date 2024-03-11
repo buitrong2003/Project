@@ -201,7 +201,6 @@
         let publisher = $(button).closest('tr').find('td[name="publisher"]').text().trim();
         let date = $(button).closest('tr').find('td[name="date"]').text().trim();
         let genre = $(button).closest('tr').find('td[name="genre"]').text().trim();
-        console.log(genre);
         $('#idEditInput').val(id);
         $('#nameEditInput').val(name);
         $('#authorEditInput').val(author);

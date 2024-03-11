@@ -27,10 +27,9 @@ import lombok.ToString;
 public class Order {
 
     private int order_id;
-    private String order_name;
     private Date order_date;
     private double total_amount;
     private int id_status;
-    private int quantity;
-    private double price;
+    private int id_customer;
+    private String user_name;
 }

@@ -54,47 +54,55 @@
                             </c:forEach>   
                         </div>
                     </div>
+
                     <div class="col-md-3" style="margin-bottom: 5%">
-                        <div class="cart-item">
-                            <div class="row">
-                                <div style="font-weight: bold" class="col-md-5">
-                                    <div>Name: </div>
-                                    <div style="margin-top: 23%">Email: </div>
-                                    <div style="margin-top: 25%">Address: </div>
-                                </div>
-                                <div class="col-md-7">
-                                    <input style="width: 110%;margin-bottom: 10%;background-color: #F6F5FA;border: none;border-radius: 10px!important;font-weight: 700" type="text" />
-                                    <input  style="width: 110%;margin-bottom: 10%;background-color: #F6F5FA;border: none;border-radius: 10px!important;font-weight: 700" type="email" />
-                                    <input style="width: 110%;margin-bottom: 10%;background-color: #F6F5FA;border: none;border-radius: 10px!important;font-weight: 700" type="text" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="cart-item">                            
-                            <div class="row">
-                                <div style="text-align: left" class="col-md-6">
-                                    <h5>Discount: </h5>
-                                    <h5>Shipping:</h5>
-                                    <h5 style="margin-right: 10%">Total:</h5>
-                                </div>
-                                <div class="col-md-6">
-                                    <h5><span id="sub-total">₫0</span></h5>
-                                    <h5><span id="tax-amount">₫0</span></h5>
-                                    <h5><span id="total-price">
-                                            <script>
-                                                var newPrice = ${requestScope.totalMoney == null ? 0 : requestScope.totalMoney};
-                                                var formattedPrice = newPrice.toLocaleString('en-US', {minimumFractionDigits: 0});
-                                                formattedPrice = formattedPrice.replace(/,/g, '.');
-                                                document.write('₫' + formattedPrice);
-                                            </script>
-                                        </span></h5>
+                        <form class="check-out-submit" action="checkout" method="post">
+                            <div class="cart-item">
+                                <div class="row">
+                                    <div style="font-weight: bold" class="col-md-5">
+                                        <div>Name: </div>
+                                        <div style="margin-top: 23%">Email: </div>
+                                        <div style="margin-top: 23%">Phone: </div>
+                                        <div style="margin-top: 25%">Address: </div>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <input id="name" value="${sessionScope.acount.user_name}" name="name" style="width: 110%;margin-bottom: 10%;background-color: #F6F5FA;border: none;border-radius: 10px!important;font-weight: 700" type="text" />
+                                        <span id="nameError" style="color: red; display: none;">Vui lòng nhập tên</span>
+                                        <input id="email" value="${sessionScope.acount.email}" name="email"  style="width: 110%;margin-bottom: 10%;background-color: #F6F5FA;border: none;border-radius: 10px!important;font-weight: 700" type="email" />
+                                        <span id="emailError" style="color: red; display: none;">Vui lòng nhập email hợp lệ</span>
+                                        <input id="phone" name="phone" style="width: 110%;margin-bottom: 10%;background-color: #F6F5FA;border: none;border-radius: 10px!important;font-weight: 700" type="text" />
+                                        <span id="phoneError" style="color: red; display: none;">Vui lòng nhập số điện thoại hợp lệ</span>
+                                        <input id="address" name="address" style="width: 110%;margin-bottom: 10%;background-color: #F6F5FA;border: none;border-radius: 10px!important;font-weight: 700" type="text" />
+                                        <span id="addressError" style="color: red; display: none;">Vui lòng nhập địa chỉ</span>
+
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div style="width: 70%;margin: auto">
-                            <form class="check-out-submit" action="checkout">
+                            <div class="cart-item">                            
+                                <div class="row">
+                                    <div style="text-align: left" class="col-md-6">
+                                        <h5>Discount: </h5>
+                                        <h5>Shipping:</h5>
+                                        <h5 style="margin-right: 10%">Total:</h5>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h5><span id="sub-total">₫0</span></h5>
+                                        <h5><span id="tax-amount">₫0</span></h5>
+                                        <h5><span id="total-price">
+                                                <script>
+                                                    var newPrice = ${requestScope.totalMoney == null ? 0 : requestScope.totalMoney};
+                                                    var formattedPrice = newPrice.toLocaleString('en-US', {minimumFractionDigits: 0});
+                                                    formattedPrice = formattedPrice.replace(/,/g, '.');
+                                                    document.write('₫' + formattedPrice);
+                                                </script>
+                                            </span></h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="width: 70%;margin: auto">
                                 <button onclick="getSubmitCheckout(event)" class="btn btn-success check-out">Check Out</button>
-                            </form>
-                        </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -105,9 +113,6 @@
             <!-- Thư viện DataTables -->
             <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
             <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
-
-
-
         </section>
     </body>
 </html>

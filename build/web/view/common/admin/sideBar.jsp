@@ -50,5 +50,10 @@
             <span>User</span>
         </a>
     </li>
-
+    <li class="nav-item">
+        <a class="nav-link" href="../admin/order">
+            <i class="fas fa-fw fa-shopping-cart order"></i>
+            <span>Order</span>
+        </a>
+    </li>
 </ul>

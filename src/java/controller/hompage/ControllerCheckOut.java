@@ -6,7 +6,10 @@ package controller.hompage;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import dal.implement.BookDAO;
+import dal.implement.CustomerDAO;
 import dal.implement.OrderDAO;
+import dal.implement.OrderDetailsDAO;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -17,9 +20,12 @@ import jakarta.servlet.http.HttpSession;
 import java.net.URLDecoder;
 import java.sql.Date;
 import java.util.List;
+import model.Book;
 import model.Cart;
+import model.Customer;
 import model.Item;
 import model.Order;
+import model.OrderDetails;
 import model.User;
 
 /**
@@ -38,10 +44,32 @@ public class ControllerCheckOut extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     OrderDAO daoOrder = new OrderDAO();
+    CustomerDAO daoCustomer = new CustomerDAO();
+    OrderDetailsDAO daoOrderDetails = new OrderDetailsDAO();
+    BookDAO daoBook = new BookDAO();
     
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+    }
+
+    /**
+     * Handles the HTTP <code>POST</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        List<Book> listBook = daoBook.findAll();
+        String nameCustomer = request.getParameter("name");
+        String address = request.getParameter("address");
+        String phone = request.getParameter("phone");
+        String email = request.getParameter("email");
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("acount");
         String username = user == null ? "|" : user.getUser_name();
@@ -63,37 +91,54 @@ public class ControllerCheckOut extends HttpServlet {
         if (listCartJson != null) {
             cart = new Cart(username, itemArray, null);
         }
-        Date currentDate = new Date(System.currentTimeMillis());
         if (cart != null) {
+            double totalAmount = cart.totalMoney(username);
+            Customer customer = Customer.builder()
+                    .name(nameCustomer)
+                    .address(address)
+                    .phone(phone)
+                    .email(email)
+                    .build();
+            int idCustomer = daoCustomer.insert(customer);
+            Date currentDate = new Date(System.currentTimeMillis());
+            Order order = Order.builder()
+                    .order_date(currentDate)
+                    .total_amount(totalAmount)
+                    .id_status(1)
+                    .id_customer(idCustomer)
+                    .user_name(username)
+                    .build();
+            int orderID = daoOrder.insert(order);
             for (Item item : cart.getListCart().get(username)) {
-                Order order = Order.builder()
-                        .order_name(item.getBook().getName())
-                        .order_date(currentDate)
-                        .total_amount(item.getPrice() * item.getQuantity())
-                        .id_status(1)
+                OrderDetails orderDetails = OrderDetails.builder()
+                        .order_id(orderID)
+                        .book_id(item.getBook().getBook_id())
                         .quantity(item.getQuantity())
-                        .price(item.getPrice())
+                        .price(item.getQuantity() * item.getPrice())
                         .build();
-                daoOrder.insert(order);
+                daoOrderDetails.insert(orderDetails);
+            }
+            processCheckout(listBook, itemArray);
+        }
+        Cookie cookieDelete = new Cookie(username, "");
+        cookieDelete.setPath("/");
+        cookieDelete.setMaxAge(0);
+        response.addCookie(cookieDelete);
+        response.sendRedirect("completed");
+    }
+    
+    private void processCheckout(List<Book> listBook, Item[] itemArray) {
+        for (Item item : itemArray) {
+            for (Book book : listBook) {
+                if (item.getBook().getBook_id() == book.getBook_id()) {
+                    int quantity = book.getQuantity() - item.getQuantity();
+                    if (quantity >= 0) {
+                        book.setQuantity(quantity);
+                        daoBook.setQuantity(book.getBook_id(), quantity);
+                    }
+                }
             }
         }
-        List<Order> listOrder = daoOrder.findAll();
-        request.setAttribute("listOrder", listOrder);
-        request.getRequestDispatcher("view/order.jsp").forward(request, response);
-    }
-
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        
     }
 
     /**

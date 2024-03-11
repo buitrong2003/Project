@@ -103,7 +103,7 @@
                                                 </script>
                                             </div>
                                         </div>
-                                        <button style="width: 100%;border: none;margin-bottom: 10%;margin-top: 7%;background-color: #008CFA;padding: 5px;border-radius: 10px;color: white">Mua Ngay</button>
+                                        <button onclick="getDetails('${book.getBook_id()}')" style="width: 100%;border: none;margin-bottom: 10%;margin-top: 7%;background-color: #008CFA;padding: 5px;border-radius: 10px;color: white">Mua Ngay</button>
                                     </div>
                                 </div>
                             </div>

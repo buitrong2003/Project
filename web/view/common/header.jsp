@@ -69,7 +69,7 @@
                                 <div class="hidden-content">
                                     <div class="arrow-up"></div>
                                     <a href="profile" style="width: 100%;margin-top: 5%">Tài khoản của tôi</a>
-                                    <div style="width: 100%;margin-top: 5%">Đơn mua</div>
+                                    <a href="completed" style="width: 100%;margin-top: 5%">Đơn mua</a>
                                     <div onclick="getLogout()" style="width: 100%;margin-top: 5%">Đăng xuất</div>
                                 </div>
                             </div>                               

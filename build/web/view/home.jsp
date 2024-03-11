@@ -37,6 +37,46 @@
                     <h1 onclick="getChange(1)" style="position: absolute; right: 10%; top: 50%; transform: translateY(-50%); z-index: 2; background: none; border: none; font-size: 24px; cursor: pointer;width: 40px; height: 40px; border-radius: 50%; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); display: flex; justify-content: center; align-items: center; background: white;color: #573BA2">></h1>
                 </div>
             </div>
+            <c:if test="${sessionScope.acount != null}">
+                <h2 style="text-align: center;margin-top: -5%;margin-bottom: 2%;border-bottom: 1px solid #E4E4E4;color: #2980B9">Đề Xuất</h2>
+                <div style="margin-bottom: 5%" class="container">
+                    <div class="row">
+                        <c:forEach items="${requestScope.listPropose}" var="book" varStatus="status">
+                            <div  class="col-md-3 mb-3">
+                                <div style="box-shadow: 0px 0px 10px rgba(0,0,0,0.1);width: 90%;height: 80vh;background-color: white;border-radius: 6px">
+                                    <div style="width: 80%;margin: 0 auto">
+                                        <img class="hover-scale" onclick="getDetailsHome('${book.getBook_id()}')" style="transition: transform 0.3s ease-in-out;height: 45vh;border-radius: 6px;width: 100%;cursor: pointer;margin-top: 10%;" src="image/${book.image}" alt="alt"/>
+                                        <input id="${book.getBook_id()}" type="hidden" name="book" value="${book}">
+                                        <div style="margin-top: 5%;height: 8vh;font-weight: 500;cursor: pointer" onclick="getDetailsHome('${book.getBook_id()}')" class="truncate book-home">${book.name}</div>
+                                        <div style="width: 100%">
+                                            <div style="font-size: 80%">${book.author}</div>
+                                        </div>
+                                        <div style="display: flex;justify-content: center;margin-top: 10%;gap: 20%">
+                                            <div style="text-decoration: line-through;color: #9E9E9E">
+                                                <script>
+                                                    var newPrice = ${book.price + 200000};
+                                                    var formattedPrice = newPrice.toLocaleString('en-US', {minimumFractionDigits: 0});
+                                                    formattedPrice = formattedPrice.replace(/,/g, '.');
+                                                    document.write('₫' + formattedPrice);
+                                                </script>
+                                            </div>
+                                            <div style="color: #F59481">
+                                                <script>
+                                                    var newPrice = ${book.price};
+                                                    var formattedPrice = newPrice.toLocaleString('en-US', {minimumFractionDigits: 0});
+                                                    formattedPrice = formattedPrice.replace(/,/g, '.');
+                                                    document.write('₫' + formattedPrice);
+                                                </script>
+                                            </div>
+                                        </div>
+                                        <button style="width: 100%;border: none;margin-bottom: 15%;margin-top: 10%;background-color: #008CFA;padding: 5px;border-radius: 10px;color: white" onclick="getDetailsHome('${book.getBook_id()}')">Mua Ngay</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </c:forEach>
+                    </div>
+                </div>
+            </c:if>
             <h2 style="text-align: center;margin-top: -5%;margin-bottom: 2%;border-bottom: 1px solid #E4E4E4;color: #2980B9">Sách mới cập nhật</h2>
             <div class="container">
                 <div class="row">

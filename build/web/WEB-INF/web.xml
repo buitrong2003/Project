@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
+    <filter>
+        <filter-name>AdminFilter</filter-name>
+        <filter-class>filter.AdminFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>UserFilter</filter-name>
+        <filter-class>filter.UserFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AdminFilter</filter-name>
+        <url-pattern>/admin/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>UserFilter</filter-name>
+        <url-pattern>/cart</url-pattern>
+        <url-pattern>/profile</url-pattern>
+        <url-pattern>/completed</url-pattern>
+    </filter-mapping>
     <servlet>
         <servlet-name>ControllerBook</servlet-name>
         <servlet-class>controller.hompage.ControllerBook</servlet-class>
@@ -59,6 +77,14 @@
     <servlet>
         <servlet-name>ControllerChart</servlet-name>
         <servlet-class>controller.admin.ControllerChart</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ControllerCompletedOrder</servlet-name>
+        <servlet-class>controller.hompage.ControllerCompletedOrder</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>OrderAdminServlet</servlet-name>
+        <servlet-class>controller.admin.OrderAdminServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>ControllerBook</servlet-name>
@@ -142,5 +168,13 @@
     <servlet-mapping>
         <servlet-name>ControllerChart</servlet-name>
         <url-pattern>/admin/chart</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ControllerCompletedOrder</servlet-name>
+        <url-pattern>/completed</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>OrderAdminServlet</servlet-name>
+        <url-pattern>/admin/order</url-pattern>
     </servlet-mapping>
 </web-app>
